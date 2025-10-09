@@ -1,0 +1,2287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>黑龙江省广播电视无线发射台站调研</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#64748b',
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        danger: '#ef4444',
+                        light: '#f1f5f9',
+                        dark: '#1e293b'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .table-shadow {
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            }
+            .transition-custom {
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .underline-input {
+                border: none;
+                border-bottom: 2px solid #cbd5e1;
+                border-radius: 0;
+                padding: 0 0 2px 0;
+                background: transparent;
+                width: 240px;
+            }
+            .underline-input:focus {
+                border-bottom-color: #3b82f6;
+                outline: none;
+                box-shadow: none;
+            }
+            .no-wrap-header {
+                white-space: nowrap;
+            }
+            .input-error {
+                border-color: #ef4444 !important;
+                box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.2) !important;
+            }
+            .four-lines-height {
+                min-height: calc(4 * 1.5rem);
+                line-height: 1.5;
+                padding-top: 0.75rem;
+                padding-bottom: 0.75rem;
+            }
+            textarea[disabled], input[disabled] {
+                background-color: #f8fafc;
+            }
+            .financial-table th:nth-child(1),
+            .financial-table td:nth-child(1) {
+                width: 14%;
+                min-width: 130px;
+            }
+            .financial-table th:nth-child(2),
+            .financial-table td:nth-child(2) {
+                width: 14%;
+                min-width: 130px;
+            }
+            .financial-table th:nth-child(3),
+            .financial-table td:nth-child(3) {
+                width: 12%;
+                min-width: 110px;
+            }
+            .financial-table th:nth-child(4),
+            .financial-table td:nth-child(4) {
+                width: 12%;
+                min-width: 110px;
+            }
+            .financial-table th:nth-child(5),
+            .financial-table td:nth-child(5) {
+                width: 18%;
+                min-width: 160px;
+            }
+            .financial-table th:nth-child(6),
+            .financial-table td:nth-child(6) {
+                width: 15%;
+                min-width: 130px;
+            }
+            .financial-table th:nth-child(7),
+            .financial-table td:nth-child(7) {
+                width: 15%;
+                min-width: 130px;
+            }
+            .header-inner-border th:not(:first-child) {
+                border-left: 1px solid #e5e7eb;
+            }
+            .header-inner-border th:not(:last-child) {
+                border-right: 1px solid #e5e7eb;
+            }
+            .header-inner-border tr:first-child th {
+                border-top: none;
+            }
+            .input-disabled {
+                background-color: #f3f4f6;
+                cursor: not-allowed;
+                opacity: 0.7;
+            }
+            input[type=number]::-webkit-outer-spin-button,
+            input[type=number]::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+            input[type=number] {
+                -moz-appearance: textfield;
+                -webkit-appearance: textfield;
+                -ms-appearance: textfield;
+                appearance: textfield;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <div class="container mx-auto px-4 py-8 max-w-7xl">
+        <header class="mb-8 text-center">
+            <div class="text-[clamp(1.6rem,3.5vw,2.2rem)] font-bold text-dark mb-6">黑龙江省广播电视无线发射台站调研</div>
+            
+            <div class="flex justify-center items-center mb-8 text-lg">
+                <span class="text-dark mr-2">填报单位：</span>
+                <input type="text" id="reportingUnit" class="underline-input focus:ring-0 focus:border-primary" placeholder="请输入单位名称">
+            </div>
+            
+            <div class="flex justify-center gap-4 mb-8">
+                <button id="btnTable1" class="bg-primary text-white px-6 py-2 rounded-lg shadow-md flex items-center transition-custom">
+                    财务资产
+                </button>
+                <button id="btnTable2" class="bg-gray-200 hover:bg-gray-300 text-dark px-6 py-2 rounded-lg shadow-md flex items-center transition-custom">
+                    人事编制
+                </button>
+                <button id="btnTable3" class="bg-gray-200 hover:bg-gray-300 text-dark px-6 py-2 rounded-lg shadow-md flex items-center transition-custom">
+                    业务信息
+                </button>
+            </div>
+        </header>
+        
+        <div class="flex justify-between items-center mb-6">
+            <div id="contactInfo" class="text-lg text-dark font-medium">省局联系人：鲍鹏，0451-82898466</div>
+            <button id="exportExcel" class="bg-success hover:bg-success/90 text-white px-6 py-2 rounded-lg shadow-md flex items-center transition-custom">
+                <i class="fa fa-file-excel-o mr-2"></i>导出
+            </button>
+        </div>
+        
+        <div id="message" class="mt-4 p-4 rounded-lg hidden"></div>
+        
+        <div id="table1Content" class="form-content">
+            <div class="overflow-x-auto bg-white rounded-xl p-6 table-shadow mb-8">
+                <table id="financialTable" class="min-w-full divide-y divide-gray-200 financial-table">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider no-wrap-header">预算级次</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider no-wrap-header">经费形式</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider no-wrap-header">年均预算收入</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider no-wrap-header">固定资产原值</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider no-wrap-header">非独立房产土地</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider no-wrap-header">台站道路情况</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider no-wrap-header">用水方式</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200" id="financialTableBody">
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="overflow-x-auto bg-white rounded-xl p-6 table-shadow mb-8">
+                <h3 class="text-lg font-semibold text-primary mb-4">房产情况</h3>
+                
+                <table id="propertyTable" class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">数量</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">面积合计</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">原值合计</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200" id="propertyTableBody">
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="overflow-x-auto bg-white rounded-xl p-6 table-shadow mb-8">
+                <h3 class="text-lg font-semibold text-primary mb-4">土地情况</h3>
+                
+                <table id="landTable" class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">数量</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">面积合计</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">原值合计</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200" id="landTableBody">
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="overflow-x-auto bg-white rounded-xl p-6 table-shadow mb-8">
+                <h3 class="text-lg font-semibold text-primary mb-4">车辆情况</h3>
+                
+                <table id="vehicleTable" class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">数量</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">原值合计</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200" id="vehicleTableBody">
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="overflow-x-auto bg-white rounded-xl p-6 table-shadow mb-8">
+                <h3 class="text-lg font-semibold text-primary mb-4">采暖情况</h3>
+                
+                <table id="heatingTable" class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">锅炉类型</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">投入使用时间</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">原值</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">年均费用</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200" id="heatingTableBody">
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="bg-blue-50 border-l-4 border-blue-400 p-6 mb-8 rounded-r-lg">
+                <h3 class="text-lg font-semibold text-blue-800 mb-3">填写注意事项：</h3>
+                <ul class="text-blue-700 space-y-2 text-sm">
+                    <li>1. 所有数据以上年度决算报表和财务报告为准</li>
+                    <li>2. 资产金额填写资产原值，单位为万元，房产面积填写建筑面积，单位为平方米</li>
+                    <li>3. 预算级次填写：省级预算、地方预算</li>
+                    <li>4. 经费形式填写：财政拨款（全额拨款）、财政补助（差额补贴）、自收自支（经费自理）</li>
+                    <li>5. 预算收入金额填写调整后的收入全年预算数，收入费用数均为近3年平均数</li>
+                    <li>6. 用水方式填写自来水、自建水井等方式</li>
+                    <li>7. 采暖方式填写电采暖、煤采暖等方式，投入使用时间</li>
+                    <li>8. 台站道路情况由非主城区单位填写</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="table2Content" class="form-content hidden">
+            <div id="basicInfoTable" class="overflow-x-auto bg-white rounded-xl p-6 table-shadow mb-8">
+                <table class="min-w-full divide-y divide-gray-200 mb-6">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider w-1/6">地区</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">台站名称</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider w-1/2">台站地址</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr class="hover:bg-gray-50 transition-custom">
+                            <td class="px-6 py-4 whitespace-nowrap w-1/6">
+                                <input type="text" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <input type="text" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap w-1/2">
+                                <input type="text" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">单位级别</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">隶属关系</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">是否独立法人</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">法人证书号</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr class="hover:bg-gray-50 transition-custom">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <input type="text" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <input type="text" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <select id="isLegalPerson" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                                    <option value="">请选择</option>
+                                    <option value="是">是</option>
+                                    <option value="否">否</option>
+                                </select>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <input id="legalPersonCertificateNumber" type="text" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom input-disabled" disabled>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div id="staffingTable" class="overflow-x-auto bg-white rounded-xl p-6 table-shadow mb-8">
+                <h3 class="text-lg font-semibold text-primary mb-4">人员编制与实有情况</h3>
+                
+                <table class="min-w-full divide-y divide-gray-200 mb-6">
+                    <thead class="header-inner-border">
+                        <tr class="bg-gray-50">
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider" colspan="9">编制情况</th>
+                        </tr>
+                        <tr class="bg-gray-50">
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">总计</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider" colspan="4">省编</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider" colspan="4">地方编</th>
+                        </tr>
+                        <tr class="bg-gray-50">
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider"></th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">合计</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">管理</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">专业技术</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">工勤</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">合计</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">管理</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">专业技术</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">工勤</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr class="hover:bg-gray-50 transition-custom">
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="text" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="number" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="number" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="number" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="number" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="number" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="number" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="number" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="number" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="header-inner-border">
+                        <tr class="bg-gray-50">
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider" colspan="12">实有人员情况</th>
+                        </tr>
+                        <tr class="bg-gray-50">
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">总计</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider" colspan="4">省编</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider" colspan="4">地方编</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider" colspan="3"></th>
+                        </tr>
+                        <tr class="bg-gray-50">
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider"></th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">合计</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">管理</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">专业技术</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">工勤</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">合计</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">管理</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">专业技术</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">工勤</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">离退休</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">临时工</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">借调</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr class="hover:bg-gray-50 transition-custom">
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="text" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="number" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="number" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="number" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="number" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="number" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="number" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="number" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="number" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="number" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="number" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="number" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div id="leadershipTable" class="overflow-x-auto bg-white rounded-xl p-6 table-shadow mb-8">
+                <h3 class="text-lg font-semibold text-primary mb-4">领导与机构情况</h3>
+                
+                <table class="min-w-full divide-y divide-gray-200 mb-6">
+                    <thead class="header-inner-border">
+                        <tr class="bg-gray-50">
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider" colspan="6">领导班子</th>
+                        </tr>
+                        <tr class="bg-gray-50">
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider" colspan="3">正职</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider" colspan="3">副职</th>
+                        </tr>
+                        <tr class="bg-gray-50">
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">级别</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">职数</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">实配</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">级别</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">职数</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">实配</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr class="hover:bg-gray-50 transition-custom">
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="text" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="number" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="number" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="text" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="number" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="number" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <table class="min-w-full divide-y divide-gray-200 mb-6">
+                    <thead class="header-inner-border">
+                        <tr class="bg-gray-50">
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider" colspan="4">内设机构</th>
+                        </tr>
+                        <tr class="bg-gray-50">
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">级别</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">机构数</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">职数</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">实配</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr class="hover:bg-gray-50 transition-custom">
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="text" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="number" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="number" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="number" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="header-inner-border">
+                        <tr class="bg-gray-50">
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider" colspan="5">职称情况</th>
+                        </tr>
+                        <tr class="bg-gray-50">
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">合计</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">正高</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">副高</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">中级</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-secondary uppercase tracking-wider">初级</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr class="hover:bg-gray-50 transition-custom">
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="number" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="number" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="number" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="number" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <input type="number" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="bg-blue-50 border-l-4 border-blue-400 p-6 mb-8 rounded-r-lg">
+                <h3 class="text-lg font-semibold text-blue-800 mb-3">说明：</h3>
+                <ul class="text-blue-700 space-y-2 text-sm">
+                    <li>1. 编制信息中除省编以外的编制统一填入地方编中；</li>
+                    <li>2. 实有人员情况中，离退休、临时工、借调人员单独统计；</li>
+                    <li>3. 领导班子中，正职、副职按实际级别填写；</li>
+                    <li>4. 内设机构按实际设置情况填写；</li>
+                    <li>5. 职称情况统计专业技术人员的职称情况。</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="table3Content" class="form-content hidden">
+            <div class="overflow-x-auto bg-white rounded-xl p-6 table-shadow mb-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold text-primary">中波业务</h3>
+                    <div class="flex gap-3">
+                        <button class="addRow bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg shadow-md flex items-center transition-custom" data-table="mw">
+                            <i class="fa fa-plus mr-2"></i>添加行
+                        </button>
+                        <button class="deleteRow bg-danger hover:bg-danger/90 text-white px-4 py-2 rounded-lg shadow-md flex items-center transition-custom" data-table="mw">
+                            <i class="fa fa-trash mr-2"></i>删除选中行
+                        </button>
+                    </div>
+                </div>
+                
+                <table id="mwTable" class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider w-10">
+                                <input type="checkbox" class="selectAll" data-table="mw" class="rounded text-primary focus:ring-primary">
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">频率（KHz）</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">功率（Kw）</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">节目</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">经费来源及额度（万元）</th>
+                            <th class="px-8 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider no-wrap-header w-40">是否有备机</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200" id="mwTableBody">
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="overflow-x-auto bg-white rounded-xl p-6 table-shadow mb-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold text-primary">地面数字电视</h3>
+                    <div class="flex gap-3">
+                        <button class="addRow bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg shadow-md flex items-center transition-custom" data-table="dtt">
+                            <i class="fa fa-plus mr-2"></i>添加行
+                        </button>
+                        <button class="deleteRow bg-danger hover:bg-danger/90 text-white px-4 py-2 rounded-lg shadow-md flex items-center transition-custom" data-table="dtt">
+                            <i class="fa fa-trash mr-2"></i>删除选中行
+                        </button>
+                    </div>
+                </div>
+                
+                <table id="dttTable" class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider w-10">
+                                <input type="checkbox" class="selectAll" data-table="dtt" class="rounded text-primary focus:ring-primary">
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">频道</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">节目</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">经费来源及额度（万元）</th>
+                            <th class="px-8 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider no-wrap-header w-40">是否有备机</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200" id="dttTableBody">
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="overflow-x-auto bg-white rounded-xl p-6 table-shadow mb-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold text-primary">调频广播业务</h3>
+                    <div class="flex gap-3">
+                        <button class="addRow bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg shadow-md flex items-center transition-custom" data-table="fm">
+                            <i class="fa fa-plus mr-2"></i>添加行
+                        </button>
+                        <button class="deleteRow bg-danger hover:bg-danger/90 text-white px-4 py-2 rounded-lg shadow-md flex items-center transition-custom" data-table="fm">
+                            <i class="fa fa-trash mr-2"></i>删除选中行
+                        </button>
+                    </div>
+                </div>
+                
+                <table id="fmTable" class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider w-10">
+                                <input type="checkbox" class="selectAll" data-table="fm" class="rounded text-primary focus:ring-primary">
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">频率（MHz）</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">功率（Kw）</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">节目</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">经费来源及额度（万元）</th>
+                            <th class="px-8 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider no-wrap-header w-40">是否有备机</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200" id="fmTableBody">
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="overflow-x-auto bg-white rounded-xl p-6 table-shadow mb-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold text-primary">微波业务-微波（7-8GHz、11GHz）</h3>
+                    <div class="flex gap-3">
+                        <button class="addRow bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg shadow-md flex items-center transition-custom" data-table="microwave">
+                            <i class="fa fa-plus mr-2"></i>添加行
+                        </button>
+                        <button class="deleteRow bg-danger hover:bg-danger/90 text-white px-4 py-2 rounded-lg shadow-md flex items-center transition-custom" data-table="microwave">
+                            <i class="fa fa-trash mr-2"></i>删除选中行
+                        </button>
+                    </div>
+                </div>
+                
+                <table id="microwaveTable" class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider w-10">
+                                <input type="checkbox" class="selectAll" data-table="microwave" class="rounded text-primary focus:ring-primary">
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">传输方向</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200" id="microwaveTableBody">
+                    </tbody>
+                </table>
+                
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">经费来源及额度（万元）</label>
+                    <input type="text" id="microwaveFunds" placeholder="省财政预算拨款+省级无线覆盖维护资金" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom">
+                </div>
+            </div>
+            
+            <div class="overflow-x-auto bg-white rounded-xl p-6 table-shadow mb-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold text-primary">数字音频广播(CDR)</h3>
+                    <div class="flex gap-3">
+                        <button class="addRow bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg shadow-md flex items-center transition-custom" data-table="cdr">
+                            <i class="fa fa-plus mr-2"></i>添加行
+                        </button>
+                        <button class="deleteRow bg-danger hover:bg-danger/90 text-white px-4 py-2 rounded-lg shadow-md flex items-center transition-custom" data-table="cdr">
+                            <i class="fa fa-trash mr-2"></i>删除选中行
+                        </button>
+                    </div>
+                </div>
+                
+                <table id="cdrTable" class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider w-10">
+                                <input type="checkbox" class="selectAll" data-table="cdr" class="rounded text-primary focus:ring-primary">
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">频率（MHz）</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">功率（Kw）</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">节目</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">经费来源及额度（万元）</th>
+                            <th class="px-8 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider no-wrap-header w-40">是否有备机</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200" id="cdrTableBody">
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="overflow-x-auto bg-white rounded-xl p-6 table-shadow mb-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold text-primary">发射塔信息</h3>
+                    <div class="flex gap-3">
+                        <button class="addRow bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg shadow-md flex items-center transition-custom" data-table="tower">
+                            <i class="fa fa-plus mr-2"></i>添加行
+                        </button>
+                        <button class="deleteRow bg-danger hover:bg-danger/90 text-white px-4 py-2 rounded-lg shadow-md flex items-center transition-custom" data-table="tower">
+                            <i class="fa fa-trash mr-2"></i>删除选中行
+                        </button>
+                    </div>
+                </div>
+                
+                <table id="towerTable" class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider w-10">
+                                <input type="checkbox" class="selectAll" data-table="tower" class="rounded text-primary focus:ring-primary">
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">塔型</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">塔高（米）</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">资产归属</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">用途</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200" id="towerTableBody">
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="overflow-x-auto bg-white rounded-xl p-6 table-shadow mb-8">
+                <h3 class="text-lg font-semibold text-primary mb-4">电力情况</h3>
+                
+                <table id="powerTable" class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">接入外电数量（路）</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">自行维护</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">电业局维护</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">柴发及UPS情况</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200" id="powerTableBody">
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="overflow-x-auto bg-white rounded-xl p-6 table-shadow mb-8">
+                <h3 class="text-lg font-semibold text-primary mb-4">是否代维其他业务</h3>
+                
+                <div class="flex items-center mb-4">
+                    <select id="maintenanceSelect" class="w-32 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom mr-4">
+                        <option value="">请选择</option>
+                        <option value="是">是</option>
+                        <option value="否">否</option>
+                    </select>
+                    <input type="text" id="maintenanceDetails" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom bg-gray-50" placeholder="如移动、联通、电信等代维业务（简要情况说明）" disabled>
+                </div>
+                
+                <h3 class="text-lg font-semibold text-primary mb-4">是否下辖二级台站</h3>
+                
+                <div class="flex items-center">
+                    <select id="substationSelect" class="w-32 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom mr-4">
+                        <option value="">请选择</option>
+                        <option value="是">是</option>
+                        <option value="否">否</option>
+                    </select>
+                    <input type="text" id="substationName" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom bg-gray-50" placeholder="二级台站需按照此表单独填写一份" disabled>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <script>
+        const budgetLevels = ["请选择", "省级预算", "地方预算"];
+        const fundingTypes = ["请选择", "财政拨款", "财政补助", "自收自支"];
+        const backup = ['请选择', '是', '否'];
+        let mwRowId = 1;
+        let dttRowId = 1;
+        let fmRowId = 1;
+        let microwaveRowId = 1;
+        let cdrRowId = 1;
+        let towerRowId = 1;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeFinancialTable();
+            initializePropertyTable();
+            initializeLandTable();
+            initializeVehicleTable();
+            initializeHeatingTable();
+            
+            setupLegalPersonListener();
+            
+            addNewRow('mw');
+            addNewRow('dtt');
+            addNewRow('fm');
+            addNewRow('microwave');
+            addNewRow('cdr');
+            addNewRow('tower');
+            initializePowerTable();
+            setupMaintenanceListener();
+            setupSubstationListener();
+            setupTable3EventListeners();
+            
+            setupTabSwitching();
+            
+            document.getElementById('exportExcel').addEventListener('click', exportToExcel);
+            
+            setupCommonEventListeners();
+        });
+        
+        function initializeFinancialTable() {
+            const tableBody = document.getElementById('financialTableBody');
+            tableBody.innerHTML = '';
+            
+            for (let i = 0; i < 1; i++) {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-gray-50 transition-custom';
+                
+                const budgetLevelCell = document.createElement('td');
+                budgetLevelCell.className = 'px-6 py-4 whitespace-nowrap';
+                const budgetSelect = document.createElement('select');
+                budgetSelect.className = 'w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom';
+                budgetSelect.dataset.row = i;
+                budgetSelect.dataset.table = 'financial';
+                budgetSelect.dataset.column = '预算级次';
+                
+                budgetLevels.forEach(level => {
+                    const option = document.createElement('option');
+                    option.value = level;
+                    option.textContent = level;
+                    if (level === '请选择') {
+                        option.selected = true;
+                    }
+                    budgetSelect.appendChild(option);
+                });
+                budgetLevelCell.appendChild(budgetSelect);
+                tr.appendChild(budgetLevelCell);
+                
+                const fundingCell = document.createElement('td');
+                fundingCell.className = 'px-6 py-4 whitespace-nowrap';
+                const fundingSelect = document.createElement('select');
+                fundingSelect.className = 'w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom';
+                fundingSelect.dataset.row = i;
+                fundingSelect.dataset.table = 'financial';
+                fundingSelect.dataset.column = '经费形式';
+                
+                fundingTypes.forEach(type => {
+                    const option = document.createElement('option');
+                    option.value = type;
+                    option.textContent = type;
+                    if (type === '请选择') {
+                        option.selected = true;
+                    }
+                    fundingSelect.appendChild(option);
+                });
+                fundingCell.appendChild(fundingSelect);
+                tr.appendChild(fundingCell);
+                
+                const incomeCell = createInputCell(i, 'financial', '年均预算收入', '');
+                tr.appendChild(incomeCell);
+                
+                const assetCell = createInputCell(i, 'financial', '固定资产原值', '');
+                tr.appendChild(assetCell);
+                
+                const propertyCell = createInputCell(i, 'financial', '非独立房产土地', '请写明使用房产归属情况');
+                tr.appendChild(propertyCell);
+                
+                const roadCell = createInputCell(i, 'financial', '台站道路情况', '');
+                tr.appendChild(roadCell);
+                
+                const waterCell = createInputCell(i, 'financial', '用水方式', '');
+                tr.appendChild(waterCell);
+                
+                tableBody.appendChild(tr);
+            }
+        }
+        
+        function initializePropertyTable() {
+            const tableBody = document.getElementById('propertyTableBody');
+            tableBody.innerHTML = '';
+            
+            for (let i = 0; i < 1; i++) {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-gray-50 transition-custom';
+                
+                const countCell = createInputCell(i, 'property', '数量', '');
+                tr.appendChild(countCell);
+                
+                const areaCell = createInputCell(i, 'property', '面积合计', '');
+                tr.appendChild(areaCell);
+                
+                const valueCell = createInputCell(i, 'property', '原值合计', '');
+                tr.appendChild(valueCell);
+                
+                tableBody.appendChild(tr);
+            }
+        }
+        
+        function initializeLandTable() {
+            const tableBody = document.getElementById('landTableBody');
+            tableBody.innerHTML = '';
+            
+            for (let i = 0; i < 1; i++) {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-gray-50 transition-custom';
+                
+                const countCell = createInputCell(i, 'land', '数量', '');
+                tr.appendChild(countCell);
+                
+                const areaCell = createInputCell(i, 'land', '面积合计', '');
+                tr.appendChild(areaCell);
+                
+                const valueCell = createInputCell(i, 'land', '原值合计', '');
+                tr.appendChild(valueCell);
+                
+                tableBody.appendChild(tr);
+            }
+        }
+        
+        function initializeVehicleTable() {
+            const tableBody = document.getElementById('vehicleTableBody');
+            tableBody.innerHTML = '';
+            
+            for (let i = 0; i < 1; i++) {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-gray-50 transition-custom';
+                
+                const countCell = createInputCell(i, 'vehicle', '数量', '');
+                tr.appendChild(countCell);
+                
+                const valueCell = createInputCell(i, 'vehicle', '原值合计', '');
+                tr.appendChild(valueCell);
+                
+                tableBody.appendChild(tr);
+            }
+        }
+        
+        function initializeHeatingTable() {
+            const tableBody = document.getElementById('heatingTableBody');
+            tableBody.innerHTML = '';
+            
+            for (let i = 0; i < 1; i++) {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-gray-50 transition-custom';
+                
+                const typeCell = createInputCell(i, 'heating', '锅炉类型', '');
+                tr.appendChild(typeCell);
+                
+                const dateCell = createInputCell(i, 'heating', '投入使用时间', '');
+                tr.appendChild(dateCell);
+                
+                const valueCell = createInputCell(i, 'heating', '原值', '');
+                tr.appendChild(valueCell);
+                
+                const costCell = createInputCell(i, 'heating', '年均费用', '');
+                tr.appendChild(costCell);
+                
+                tableBody.appendChild(tr);
+            }
+        }
+        
+        function setupLegalPersonListener() {
+            const isLegalPerson = document.getElementById('isLegalPerson');
+            const certificateNumber = document.getElementById('legalPersonCertificateNumber');
+            
+            isLegalPerson.addEventListener('change', function() {
+                if (this.value === '是') {
+                    certificateNumber.disabled = false;
+                    certificateNumber.classList.remove('input-disabled');
+                    certificateNumber.required = true;
+                } else {
+                    certificateNumber.disabled = true;
+                    certificateNumber.classList.add('input-disabled');
+                    certificateNumber.required = false;
+                    certificateNumber.value = '';
+                }
+            });
+        }
+        
+        function initializePowerTable() {
+            const tableBody = document.getElementById('powerTableBody');
+            tableBody.innerHTML = '';
+            
+            const tr = document.createElement('tr');
+            tr.className = 'hover:bg-gray-50 transition-custom';
+            
+            const powerCountCell = createInputCell(0, 'power', '接入外电数量（路）', '2');
+            tr.appendChild(powerCountCell);
+            
+            const selfMaintainCell = createSelectCell(0, 'power', '自行维护', backup);
+            tr.appendChild(selfMaintainCell);
+            
+            const electricMaintainCell = createSelectCell(0, 'power', '电业局维护', backup);
+            tr.appendChild(electricMaintainCell);
+            
+            const upsCell = createInputCell(0, 'power', '柴发及UPS情况', '分别标注功率');
+            tr.appendChild(upsCell);
+            
+            tableBody.appendChild(tr);
+        }
+        
+        function setupMaintenanceListener() {
+            const maintenanceSelect = document.getElementById('maintenanceSelect');
+            const maintenanceDetails = document.getElementById('maintenanceDetails');
+            
+            maintenanceSelect.addEventListener('change', function() {
+                maintenanceDetails.disabled = this.value !== '是';
+                if (!this.value || this.value !== '是') {
+                    maintenanceDetails.value = '';
+                    maintenanceDetails.classList.remove('input-error');
+                    maintenanceDetails.classList.add('bg-gray-50');
+                } else {
+                    maintenanceDetails.classList.remove('bg-gray-50');
+                    maintenanceDetails.focus();
+                }
+            });
+        }
+        
+        function setupSubstationListener() {
+            const substationSelect = document.getElementById('substationSelect');
+            const substationName = document.getElementById('substationName');
+            
+            substationSelect.addEventListener('change', function() {
+                substationName.disabled = this.value !== '是';
+                if (!this.value || this.value !== '是') {
+                    substationName.value = '';
+                    substationName.classList.remove('input-error');
+                    substationName.classList.add('bg-gray-50');
+                } else {
+                    substationName.classList.remove('bg-gray-50');
+                    substationName.focus();
+                }
+            });
+        }
+        
+        function setupTable3EventListeners() {
+            document.querySelectorAll('.addRow').forEach(button => {
+                button.addEventListener('click', function() {
+                    const tableType = this.getAttribute('data-table');
+                    addNewRow(tableType);
+                });
+            });
+            
+            document.querySelectorAll('.deleteRow').forEach(button => {
+                button.addEventListener('click', function() {
+                    const tableType = this.getAttribute('data-table');
+                    deleteSelectedRows(tableType);
+                });
+            });
+            
+            document.querySelectorAll('.selectAll').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const tableType = this.getAttribute('data-table');
+                    const checkboxes = document.querySelectorAll(`#${tableType}TableBody input[type="checkbox"]`);
+                    checkboxes.forEach(cb => {
+                        cb.checked = this.checked;
+                    });
+                });
+            });
+        }
+        
+        function addNewRow(tableType) {
+            let rowId, tableBody, newRow, checkboxCell, checkbox;
+            
+            switch(tableType) {
+                case 'mw':
+                    rowId = mwRowId++;
+                    tableBody = document.getElementById('mwTableBody');
+                    newRow = createMwRow(rowId);
+                    break;
+                case 'dtt':
+                    rowId = dttRowId++;
+                    tableBody = document.getElementById('dttTableBody');
+                    newRow = createDttRow(rowId);
+                    break;
+                case 'fm':
+                    rowId = fmRowId++;
+                    tableBody = document.getElementById('fmTableBody');
+                    newRow = createFmRow(rowId);
+                    break;
+                case 'microwave':
+                    rowId = microwaveRowId++;
+                    tableBody = document.getElementById('microwaveTableBody');
+                    newRow = createMicrowaveRow(rowId);
+                    break;
+                case 'cdr':
+                    rowId = cdrRowId++;
+                    tableBody = document.getElementById('cdrTableBody');
+                    newRow = createCdrRow(rowId);
+                    break;
+                case 'tower':
+                    rowId = towerRowId++;
+                    tableBody = document.getElementById('towerTableBody');
+                    newRow = createTowerRow(rowId);
+                    break;
+            }
+            
+            if (newRow) {
+                tableBody.appendChild(newRow);
+            }
+        }
+        
+        function createMwRow(rowId) {
+            const tr = document.createElement('tr');
+            tr.className = 'hover:bg-gray-50 transition-custom';
+            tr.dataset.id = rowId;
+            
+            const checkboxCell = document.createElement('td');
+            checkboxCell.className = 'px-6 py-4 whitespace-nowrap';
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.className = 'rounded text-primary focus:ring-primary';
+            checkboxCell.appendChild(checkbox);
+            tr.appendChild(checkboxCell);
+            
+            const freqCell = createInputCell(rowId, 'mw', '频率（KHz）', '756');
+            tr.appendChild(freqCell);
+            
+            const powerCell = createInputCell(rowId, 'mw', '功率（Kw）', '100');
+            tr.appendChild(powerCell);
+            
+            const programCell = createInputCell(rowId, 'mw', '节目', '中一（中国之声）');
+            tr.appendChild(programCell);
+            
+            const fundCell = createInputCell(rowId, 'mw', '经费来源及额度（万元）', '中央维护资金100万元');
+            tr.appendChild(fundCell);
+            
+            const backupCell = createSelectCell(rowId, 'mw', '是否有备机', backup);
+            tr.appendChild(backupCell);
+            
+            return tr;
+        }
+        
+        function createDttRow(rowId) {
+            const tr = document.createElement('tr');
+            tr.className = 'hover:bg-gray-50 transition-custom';
+            tr.dataset.id = rowId;
+            
+            const checkboxCell = document.createElement('td');
+            checkboxCell.className = 'px-6 py-4 whitespace-nowrap';
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.className = 'rounded text-primary focus:ring-primary';
+            checkboxCell.appendChild(checkbox);
+            tr.appendChild(checkboxCell);
+            
+            const channelCell = createInputCell(rowId, 'dtt', '频道', '22频道');
+            tr.appendChild(channelCell);
+            
+            const programCell = createInputCell(rowId, 'dtt', '节目', '中央八套');
+            tr.appendChild(programCell);
+            
+            const fundCell = createInputCell(rowId, 'dtt', '经费来源及额度（万元）', '中央覆盖资金80万元');
+            tr.appendChild(fundCell);
+            
+            const backupCell = createSelectCell(rowId, 'dtt', '是否有备机', backup);
+            tr.appendChild(backupCell);
+            
+            return tr;
+        }
+        
+        function createFmRow(rowId) {
+            const tr = document.createElement('tr');
+            tr.className = 'hover:bg-gray-50 transition-custom';
+            tr.dataset.id = rowId;
+            
+            const checkboxCell = document.createElement('td');
+            checkboxCell.className = 'px-6 py-4 whitespace-nowrap';
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.className = 'rounded text-primary focus:ring-primary';
+            checkboxCell.appendChild(checkbox);
+            tr.appendChild(checkboxCell);
+            
+            const freqCell = createInputCell(rowId, 'fm', '频率（MHz）', '101.4');
+            tr.appendChild(freqCell);
+            
+            const powerCell = createInputCell(rowId, 'fm', '功率（Kw）', '1');
+            tr.appendChild(powerCell);
+            
+            const programCell = createInputCell(rowId, 'fm', '节目', '中国交通之声');
+            tr.appendChild(programCell);
+            
+            const fundCell = createInputCell(rowId, 'fm', '经费来源及额度（万元）', '中央台代维护资金20万元');
+            tr.appendChild(fundCell);
+            
+            const backupCell = createSelectCell(rowId, 'fm', '是否有备机', backup);
+            tr.appendChild(backupCell);
+            
+            return tr;
+        }
+        
+        function createMicrowaveRow(rowId) {
+            const tr = document.createElement('tr');
+            tr.className = 'hover:bg-gray-50 transition-custom';
+            tr.dataset.id = rowId;
+            
+            const checkboxCell = document.createElement('td');
+            checkboxCell.className = 'px-6 py-4 whitespace-nowrap';
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.className = 'rounded text-primary focus:ring-primary';
+            checkboxCell.appendChild(checkbox);
+            tr.appendChild(checkboxCell);
+            
+            const directionCell = createInputCell(rowId, 'microwave', '传输方向', '首站');
+            tr.appendChild(directionCell);
+            
+            return tr;
+        }
+        
+        function createCdrRow(rowId) {
+            const tr = document.createElement('tr');
+            tr.className = 'hover:bg-gray-50 transition-custom';
+            tr.dataset.id = rowId;
+            
+            const checkboxCell = document.createElement('td');
+            checkboxCell.className = 'px-6 py-4 whitespace-nowrap';
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.className = 'rounded text-primary focus:ring-primary';
+            checkboxCell.appendChild(checkbox);
+            tr.appendChild(checkboxCell);
+            
+            const freqCell = createInputCell(rowId, 'cdr', '频率（MHz）', '89.9');
+            tr.appendChild(freqCell);
+            
+            const powerCell = createInputCell(rowId, 'cdr', '功率（Kw）', '1');
+            tr.appendChild(powerCell);
+            
+            const programCell = createInputCell(rowId, 'cdr', '节目', '中国之声+3套广播、模数同播');
+            tr.appendChild(programCell);
+            
+            const fundCell = createInputCell(rowId, 'cdr', '经费来源及额度（万元）', '中央维护资金10万元');
+            tr.appendChild(fundCell);
+            
+            const backupCell = createSelectCell(rowId, 'cdr', '是否有备机', backup);
+            tr.appendChild(backupCell);
+            
+            return tr;
+        }
+        
+        function createTowerRow(rowId) {
+            const tr = document.createElement('tr');
+            tr.className = 'hover:bg-gray-50 transition-custom';
+            tr.dataset.id = rowId;
+            
+            const checkboxCell = document.createElement('td');
+            checkboxCell.className = 'px-6 py-4 whitespace-nowrap';
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.className = 'rounded text-primary focus:ring-primary';
+            checkboxCell.appendChild(checkbox);
+            tr.appendChild(checkboxCell);
+            
+            const typeCell = createInputCell(rowId, 'tower', '塔型', '自立塔1');
+            tr.appendChild(typeCell);
+            
+            const heightCell = createInputCell(rowId, 'tower', '塔高（米）', '180');
+            tr.appendChild(heightCell);
+            
+            const ownerCell = createInputCell(rowId, 'tower', '资产归属', '省投建设归属904台');
+            tr.appendChild(ownerCell);
+            
+            const useCell = createInputCell(rowId, 'tower', '用途', '地数天线2副、微波天线1副、调频天线2副');
+            tr.appendChild(useCell);
+            
+            return tr;
+        }
+        
+        function deleteSelectedRows(tableType) {
+            const tableBody = document.getElementById(`${tableType}TableBody`);
+            const checkboxes = tableBody.querySelectorAll('input[type="checkbox"]:checked');
+            
+            if (checkboxes.length === 0) {
+                showMessage('请先选择要删除的行', 'warning');
+                return;
+            }
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.closest('tr').remove();
+            });
+            
+            if (tableBody.children.length === 0) {
+                addNewRow(tableType);
+            }
+        }
+        
+        function createInputCell(rowIndex, tableType, columnName, placeholder) {
+            const td = document.createElement('td');
+            td.className = 'px-6 py-4 whitespace-nowrap';
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom';
+            input.placeholder = placeholder;
+            input.dataset.row = rowIndex;
+            input.dataset.table = tableType;
+            input.dataset.column = columnName;
+            input.required = true;
+            td.appendChild(input);
+            return td;
+        }
+        
+        function createSelectCell(rowIndex, tableType, columnName, options) {
+            const td = document.createElement('td');
+            td.className = 'px-6 py-4 whitespace-nowrap';
+            const select = document.createElement('select');
+            select.className = 'w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom';
+            select.dataset.row = rowIndex;
+            select.dataset.table = tableType;
+            select.dataset.column = columnName;
+            select.required = true;
+            
+            options.forEach(option => {
+                const opt = document.createElement('option');
+                opt.value = option;
+                opt.textContent = option;
+                if (option === '请选择') {
+                    opt.selected = true;
+                }
+                select.appendChild(opt);
+            });
+            
+            td.appendChild(select);
+            return td;
+        }
+        
+        function setupTabSwitching() {
+            const btnTable1 = document.getElementById('btnTable1');
+            const btnTable2 = document.getElementById('btnTable2');
+            const btnTable3 = document.getElementById('btnTable3');
+            
+            const table1Content = document.getElementById('table1Content');
+            const table2Content = document.getElementById('table2Content');
+            const table3Content = document.getElementById('table3Content');
+            
+            const contactInfo = document.getElementById('contactInfo');
+            
+            btnTable1.addEventListener('click', function() {
+                btnTable1.className = 'bg-primary text-white px-6 py-2 rounded-lg shadow-md flex items-center transition-custom';
+                btnTable2.className = 'bg-gray-200 hover:bg-gray-300 text-dark px-6 py-2 rounded-lg shadow-md flex items-center transition-custom';
+                btnTable3.className = 'bg-gray-200 hover:bg-gray-300 text-dark px-6 py-2 rounded-lg shadow-md flex items-center transition-custom';
+                
+                table1Content.classList.remove('hidden');
+                table2Content.classList.add('hidden');
+                table3Content.classList.add('hidden');
+                
+                contactInfo.textContent = '省局联系人：鲍鹏，0451-82898466';
+            });
+            
+            btnTable2.addEventListener('click', function() {
+                btnTable1.className = 'bg-gray-200 hover:bg-gray-300 text-dark px-6 py-2 rounded-lg shadow-md flex items-center transition-custom';
+                btnTable2.className = 'bg-primary text-white px-6 py-2 rounded-lg shadow-md flex items-center transition-custom';
+                btnTable3.className = 'bg-gray-200 hover:bg-gray-300 text-dark px-6 py-2 rounded-lg shadow-md flex items-center transition-custom';
+                
+                table1Content.classList.add('hidden');
+                table2Content.classList.remove('hidden');
+                table3Content.classList.add('hidden');
+                
+                contactInfo.textContent = '省局联系人：孙万军，0451-82898557';
+            });
+            
+            btnTable3.addEventListener('click', function() {
+                btnTable1.className = 'bg-gray-200 hover:bg-gray-300 text-dark px-6 py-2 rounded-lg shadow-md flex items-center transition-custom';
+                btnTable2.className = 'bg-gray-200 hover:bg-gray-300 text-dark px-6 py-2 rounded-lg shadow-md flex items-center transition-custom';
+                btnTable3.className = 'bg-primary text-white px-6 py-2 rounded-lg shadow-md flex items-center transition-custom';
+                
+                table1Content.classList.add('hidden');
+                table2Content.classList.add('hidden');
+                table3Content.classList.remove('hidden');
+                
+                contactInfo.textContent = '省局联系人：徐桂斌，0451-82898412';
+            });
+        }
+        
+        function setupCommonEventListeners() {
+            document.addEventListener('change', function(e) {
+                if (e.target.tagName === 'SELECT' || e.target.tagName === 'INPUT') {
+                    if (e.target.value.trim() !== '' && !['请选择'].includes(e.target.value)) {
+                        e.target.classList.remove('input-error');
+                    }
+                }
+            });
+        }
+        
+        function validateAllInputs() {
+            let hasEmptyInput = false;
+            let firstEmptyInput = null;
+            let firstEmptyTab = 1;
+            
+            document.querySelectorAll('.input-error').forEach(el => {
+                el.classList.remove('input-error');
+            });
+            
+            const reportingUnit = document.getElementById('reportingUnit');
+            if (!reportingUnit.value.trim()) {
+                reportingUnit.classList.add('input-error');
+                hasEmptyInput = true;
+                firstEmptyInput = reportingUnit;
+                firstEmptyTab = 1;
+            }
+            
+            const table1EmptyInput = validateTable1Inputs();
+            if (table1EmptyInput) {
+                hasEmptyInput = true;
+                if (!firstEmptyInput) {
+                    firstEmptyInput = table1EmptyInput;
+                    firstEmptyTab = 1;
+                }
+            }
+            
+            const table2EmptyInput = validateTable2Inputs();
+            if (table2EmptyInput) {
+                hasEmptyInput = true;
+                if (!firstEmptyInput) {
+                    firstEmptyInput = table2EmptyInput;
+                    firstEmptyTab = 2;
+                }
+            }
+            
+            const table3EmptyInput = validateTable3Inputs();
+            if (table3EmptyInput) {
+                hasEmptyInput = true;
+                if (!firstEmptyInput) {
+                    firstEmptyInput = table3EmptyInput;
+                    firstEmptyTab = 3;
+                }
+            }
+            
+            return { hasEmptyInput, firstEmptyInput, firstEmptyTab };
+        }
+        
+        function validateTable1Inputs() {
+            let firstEmptyInput = null;
+            
+            const financialRows = document.querySelectorAll('#financialTableBody tr');
+            for (let row of financialRows) {
+                const inputs = row.querySelectorAll('select, input');
+                for (let input of inputs) {
+                    if (input.tagName === 'SELECT' && (input.value === '' || input.value === '请选择')) {
+                        input.classList.add('input-error');
+                        if (!firstEmptyInput) firstEmptyInput = input;
+                    } else if (input.tagName === 'INPUT' && !input.value.trim()) {
+                        input.classList.add('input-error');
+                        if (!firstEmptyInput) firstEmptyInput = input;
+                    } else {
+                        input.classList.remove('input-error');
+                    }
+                }
+            }
+            
+            const propertyRows = document.querySelectorAll('#propertyTableBody tr');
+            for (let row of propertyRows) {
+                const inputs = row.querySelectorAll('input');
+                for (let input of inputs) {
+                    if (!input.value.trim()) {
+                        input.classList.add('input-error');
+                        if (!firstEmptyInput) firstEmptyInput = input;
+                    } else {
+                        input.classList.remove('input-error');
+                    }
+                }
+            }
+            
+            const landRows = document.querySelectorAll('#landTableBody tr');
+            for (let row of landRows) {
+                const inputs = row.querySelectorAll('input');
+                for (let input of inputs) {
+                    if (!input.value.trim()) {
+                        input.classList.add('input-error');
+                        if (!firstEmptyInput) firstEmptyInput = input;
+                    } else {
+                        input.classList.remove('input-error');
+                    }
+                }
+            }
+            
+            const vehicleRows = document.querySelectorAll('#vehicleTableBody tr');
+            for (let row of vehicleRows) {
+                const inputs = row.querySelectorAll('input');
+                for (let input of inputs) {
+                    if (!input.value.trim()) {
+                        input.classList.add('input-error');
+                        if (!firstEmptyInput) firstEmptyInput = input;
+                    } else {
+                        input.classList.remove('input-error');
+                    }
+                }
+            }
+            
+            const heatingRows = document.querySelectorAll('#heatingTableBody tr');
+            for (let row of heatingRows) {
+                const inputs = row.querySelectorAll('input');
+                for (let input of inputs) {
+                    if (!input.value.trim()) {
+                        input.classList.add('input-error');
+                        if (!firstEmptyInput) firstEmptyInput = input;
+                    } else {
+                        input.classList.remove('input-error');
+                    }
+                }
+            }
+            
+            return firstEmptyInput;
+        }
+        
+        function validateTable2Inputs() {
+            let firstEmptyInput = null;
+            
+            const basicInputs = document.querySelectorAll('#basicInfoTable input, #basicInfoTable select');
+            for (let input of basicInputs) {
+                if (input.disabled) continue;
+                if (input.tagName === 'SELECT' && (input.value === '' || input.value === '请选择')) {
+                    input.classList.add('input-error');
+                    if (!firstEmptyInput) firstEmptyInput = input;
+                } else if (input.tagName === 'INPUT' && !input.value.trim()) {
+                    input.classList.add('input-error');
+                    if (!firstEmptyInput) firstEmptyInput = input;
+                } else {
+                    input.classList.remove('input-error');
+                }
+            }
+            
+            const staffingInputs = document.querySelectorAll('#staffingTable input');
+            for (let input of staffingInputs) {
+                if (!input.value.trim()) {
+                    input.classList.add('input-error');
+                    if (!firstEmptyInput) firstEmptyInput = input;
+                } else {
+                    input.classList.remove('input-error');
+                }
+            }
+            
+            const leadershipInputs = document.querySelectorAll('#leadershipTable input, #leadershipTable select');
+            for (let input of leadershipInputs) {
+                if (input.tagName === 'SELECT' && (input.value === '' || input.value === '请选择')) {
+                    input.classList.add('input-error');
+                    if (!firstEmptyInput) firstEmptyInput = input;
+                } else if (input.tagName === 'INPUT' && !input.value.trim()) {
+                    input.classList.add('input-error');
+                    if (!firstEmptyInput) firstEmptyInput = input;
+                } else {
+                    input.classList.remove('input-error');
+                }
+            }
+            
+            return firstEmptyInput;
+        }
+        
+        function validateTable3Inputs() {
+            let firstEmptyInput = null;
+            
+            const mwRows = document.querySelectorAll('#mwTableBody tr');
+            for (let row of mwRows) {
+                const inputs = row.querySelectorAll('input, select');
+                for (let input of inputs) {
+                    if (input.type === 'checkbox') continue;
+                    if (input.tagName === 'SELECT' && (input.value === '' || input.value === '请选择')) {
+                        input.classList.add('input-error');
+                        if (!firstEmptyInput) firstEmptyInput = input;
+                    } else if (input.tagName === 'INPUT' && !input.value.trim()) {
+                        input.classList.add('input-error');
+                        if (!firstEmptyInput) firstEmptyInput = input;
+                    } else {
+                        input.classList.remove('input-error');
+                    }
+                }
+            }
+            
+            const dttRows = document.querySelectorAll('#dttTableBody tr');
+            for (let row of dttRows) {
+                const inputs = row.querySelectorAll('input, select');
+                for (let input of inputs) {
+                    if (input.type === 'checkbox') continue;
+                    if (input.tagName === 'SELECT' && (input.value === '' || input.value === '请选择')) {
+                        input.classList.add('input-error');
+                        if (!firstEmptyInput) firstEmptyInput = input;
+                    } else if (input.tagName === 'INPUT' && !input.value.trim()) {
+                        input.classList.add('input-error');
+                        if (!firstEmptyInput) firstEmptyInput = input;
+                    } else {
+                        input.classList.remove('input-error');
+                    }
+                }
+            }
+            
+            const fmRows = document.querySelectorAll('#fmTableBody tr');
+            for (let row of fmRows) {
+                const inputs = row.querySelectorAll('input, select');
+                for (let input of inputs) {
+                    if (input.type === 'checkbox') continue;
+                    if (input.tagName === 'SELECT' && (input.value === '' || input.value === '请选择')) {
+                        input.classList.add('input-error');
+                        if (!firstEmptyInput) firstEmptyInput = input;
+                    } else if (input.tagName === 'INPUT' && !input.value.trim()) {
+                        input.classList.add('input-error');
+                        if (!firstEmptyInput) firstEmptyInput = input;
+                    } else {
+                        input.classList.remove('input-error');
+                    }
+                }
+            }
+            
+            const microwaveRows = document.querySelectorAll('#microwaveTableBody tr');
+            for (let row of microwaveRows) {
+                const inputs = row.querySelectorAll('input');
+                for (let input of inputs) {
+                    if (input.type === 'checkbox') continue;
+                    if (!input.value.trim()) {
+                        input.classList.add('input-error');
+                        if (!firstEmptyInput) firstEmptyInput = input;
+                    } else {
+                        input.classList.remove('input-error');
+                    }
+                }
+            }
+            
+            const microwaveFunds = document.getElementById('microwaveFunds');
+            if (!microwaveFunds.value.trim() && microwaveRows.length > 0) {
+                microwaveFunds.classList.add('input-error');
+                if (!firstEmptyInput) firstEmptyInput = microwaveFunds;
+            } else {
+                microwaveFunds.classList.remove('input-error');
+            }
+            
+            const cdrRows = document.querySelectorAll('#cdrTableBody tr');
+            for (let row of cdrRows) {
+                const inputs = row.querySelectorAll('input, select');
+                for (let input of inputs) {
+                    if (input.type === 'checkbox') continue;
+                    if (input.tagName === 'SELECT' && (input.value === '' || input.value === '请选择')) {
+                        input.classList.add('input-error');
+                        if (!firstEmptyInput) firstEmptyInput = input;
+                    } else if (input.tagName === 'INPUT' && !input.value.trim()) {
+                        input.classList.add('input-error');
+                        if (!firstEmptyInput) firstEmptyInput = input;
+                    } else {
+                        input.classList.remove('input-error');
+                    }
+                }
+            }
+            
+            const towerRows = document.querySelectorAll('#towerTableBody tr');
+            for (let row of towerRows) {
+                const inputs = row.querySelectorAll('input');
+                for (let input of inputs) {
+                    if (input.type === 'checkbox') continue;
+                    if (!input.value.trim()) {
+                        input.classList.add('input-error');
+                        if (!firstEmptyInput) firstEmptyInput = input;
+                    } else {
+                        input.classList.remove('input-error');
+                    }
+                }
+            }
+            
+            const powerInputs = document.querySelectorAll('#powerTable input, #powerTable select');
+            for (let input of powerInputs) {
+                if (input.tagName === 'SELECT' && (input.value === '' || input.value === '请选择')) {
+                    input.classList.add('input-error');
+                    if (!firstEmptyInput) firstEmptyInput = input;
+                } else if (input.tagName === 'INPUT' && !input.value.trim()) {
+                    input.classList.add('input-error');
+                    if (!firstEmptyInput) firstEmptyInput = input;
+                } else {
+                    input.classList.remove('input-error');
+                }
+            }
+            
+            const maintenanceSelect = document.getElementById('maintenanceSelect');
+            const maintenanceDetails = document.getElementById('maintenanceDetails');
+            if (maintenanceSelect.value === '') {
+                maintenanceSelect.classList.add('input-error');
+                if (!firstEmptyInput) firstEmptyInput = maintenanceSelect;
+            } else if (maintenanceSelect.value === '是' && !maintenanceDetails.value.trim()) {
+                maintenanceDetails.classList.add('input-error');
+                if (!firstEmptyInput) firstEmptyInput = maintenanceDetails;
+            } else {
+                maintenanceSelect.classList.remove('input-error');
+                maintenanceDetails.classList.remove('input-error');
+            }
+            
+            const substationSelect = document.getElementById('substationSelect');
+            const substationName = document.getElementById('substationName');
+            if (substationSelect.value === '') {
+                substationSelect.classList.add('input-error');
+                if (!firstEmptyInput) firstEmptyInput = substationSelect;
+            } else if (substationSelect.value === '是' && !substationName.value.trim()) {
+                substationName.classList.add('input-error');
+                if (!firstEmptyInput) firstEmptyInput = substationName;
+            } else {
+                substationSelect.classList.remove('input-error');
+                substationName.classList.remove('input-error');
+            }
+            
+            return firstEmptyInput;
+        }
+        
+        function exportToExcel() {
+            const reportingUnit = document.getElementById('reportingUnit').value.trim();
+            if (!reportingUnit) {
+                document.getElementById('reportingUnit').classList.add('input-error');
+                document.getElementById('reportingUnit').focus();
+                showMessage('请先填写单位名称', 'warning');
+                return;
+            }
+            
+            const validationResult = validateAllInputs();
+            if (validationResult.hasEmptyInput) {
+                if (validationResult.firstEmptyTab === 1) {
+                    document.getElementById('btnTable1').click();
+                } else if (validationResult.firstEmptyTab === 2) {
+                    document.getElementById('btnTable2').click();
+                } else if (validationResult.firstEmptyTab === 3) {
+                    document.getElementById('btnTable3').click();
+                }
+                
+                setTimeout(() => {
+                    validationResult.firstEmptyInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    validationResult.firstEmptyInput.focus();
+                }, 300);
+                
+                showMessage('请填写所有表格内容后再导出', 'warning');
+                return;
+            }
+            
+            const wb = XLSX.utils.book_new();
+            
+            const table1Sheet = processTable1Sheet();
+            XLSX.utils.book_append_sheet(wb, table1Sheet, '财务资产');
+            
+            const table2Sheet = processTable2Sheet();
+            XLSX.utils.book_append_sheet(wb, table2Sheet, '人事编制');
+            
+            const table3Sheet = processTable3Sheet();
+            XLSX.utils.book_append_sheet(wb, table3Sheet, '业务信息');
+            
+            const fileName = `${reportingUnit}_黑龙江省广播电视无线发射台站调研表.xlsx`;
+            XLSX.writeFile(wb, fileName);
+            showMessage(`数据已成功导出为 "${fileName}"`, 'success');
+        }
+        
+        function processTable1Sheet() {
+            const sheetData = [];
+            let merges = [];
+            let currentRow = 0;
+            
+            sheetData.push(['预算级次及相关信息']);
+            merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 6 } });
+            currentRow++;
+            
+            const financialHeaders = ['预算级次', '经费形式', '年均预算收入', '固定资产原值', '非独立房产土地', '台站道路情况', '用水方式'];
+            sheetData.push(financialHeaders);
+            currentRow++;
+            
+            const financialRows = document.querySelectorAll('#financialTableBody tr');
+            financialRows.forEach(row => {
+                const inputs = row.querySelectorAll('select, input');
+                const rowData = Array.from(inputs).map(input => input.value);
+                sheetData.push(rowData);
+                currentRow++;
+            });
+            
+            sheetData.push(new Array(7).fill(''));
+            currentRow++;
+            
+            sheetData.push(['房产情况']);
+            merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 2 } });
+            currentRow++;
+            
+            const propertyHeaders = ['数量', '面积合计', '原值合计'];
+            sheetData.push(propertyHeaders);
+            currentRow++;
+            
+            const propertyRows = document.querySelectorAll('#propertyTableBody tr');
+            propertyRows.forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                const rowData = Array.from(inputs).map(input => input.value);
+                const fullRowData = [...rowData, '', '', '', ''];
+                sheetData.push(fullRowData);
+                currentRow++;
+            });
+            
+            sheetData.push(new Array(7).fill(''));
+            currentRow++;
+            
+            sheetData.push(['土地情况']);
+            merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 2 } });
+            currentRow++;
+            
+            const landHeaders = ['数量', '面积合计', '原值合计'];
+            sheetData.push(landHeaders);
+            currentRow++;
+            
+            const landRows = document.querySelectorAll('#landTableBody tr');
+            landRows.forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                const rowData = Array.from(inputs).map(input => input.value);
+                const fullRowData = [...rowData, '', '', '', ''];
+                sheetData.push(fullRowData);
+                currentRow++;
+            });
+            
+            sheetData.push(new Array(7).fill(''));
+            currentRow++;
+            
+            sheetData.push(['车辆情况']);
+            merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 2 } });
+            currentRow++;
+            
+            const vehicleHeaders = ['数量', '原值合计'];
+            sheetData.push(vehicleHeaders);
+            currentRow++;
+            
+            const vehicleRows = document.querySelectorAll('#vehicleTableBody tr');
+            vehicleRows.forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                const rowData = Array.from(inputs).map(input => input.value);
+                const fullRowData = [...rowData, '', '', '', '', ''];
+                sheetData.push(fullRowData);
+                currentRow++;
+            });
+            
+            sheetData.push(new Array(7).fill(''));
+            currentRow++;
+            
+            sheetData.push(['采暖情况']);
+            merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 3 } });
+            currentRow++;
+            
+            const heatingHeaders = ['锅炉类型', '投入使用时间', '原值', '年均费用'];
+            sheetData.push(heatingHeaders);
+            currentRow++;
+            
+            const heatingRows = document.querySelectorAll('#heatingTableBody tr');
+            heatingRows.forEach(row => {
+                const inputs = row.querySelectorAll('input, select');
+                const rowData = Array.from(inputs).map(input => input.value);
+                const fullRowData = [...rowData, '', '', ''];
+                sheetData.push(fullRowData);
+                currentRow++;
+            });
+            
+            const ws = XLSX.utils.aoa_to_sheet(sheetData);
+            
+            ws['!merges'] = merges;
+            
+            ws['!cols'] = [12, 12, 12, 15, 15, 12, 12];
+            
+            return ws;
+        }
+        
+        function processTable2Sheet() {
+            const sheetData = [];
+            let merges = [];
+            let currentRow = 0;
+            
+            sheetData.push(['基本信息']);
+            merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 3 } });
+            currentRow++;
+            
+            const basicInfoHeaders1 = ['地区', '台站名称', '台站地址'];
+            sheetData.push(basicInfoHeaders1);
+            currentRow++;
+            
+            const basicInfoRows = document.querySelectorAll('#basicInfoTable table:first-child tbody tr');
+            basicInfoRows.forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                const rowData = Array.from(inputs).map(input => input.value);
+                const fullRowData = [...rowData, ''];
+                sheetData.push(fullRowData);
+                currentRow++;
+            });
+            
+            sheetData.push(new Array(4).fill(''));
+            currentRow++;
+            
+            const basicInfoHeaders2 = ['单位级别', '隶属关系', '是否独立法人', '法人证书号'];
+            sheetData.push(basicInfoHeaders2);
+            currentRow++;
+            
+            const unitInfoRow = document.querySelectorAll('#basicInfoTable table:last-child tbody tr')[0];
+            if (unitInfoRow) {
+                const unitInfoInputs = unitInfoRow.querySelectorAll('select, input');
+                const unitInfoData = Array.from(unitInfoInputs).map(input => input.value);
+                sheetData.push(unitInfoData);
+                currentRow++;
+            }
+            
+            sheetData.push(new Array(4).fill(''));
+            currentRow++;
+            
+            sheetData.push(['人员编制与实有情况']);
+            merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 8 } });
+            currentRow++;
+            
+            sheetData.push(['', '编制情况', '', '', '', '', '', '', '']);
+            merges.push({ s: { r: currentRow, c: 1 }, e: { r: currentRow, c: 8 } });
+            currentRow++;
+            
+            sheetData.push(['总计', '省编', '', '', '', '地方编', '', '', '']);
+            merges.push({ s: { r: currentRow, c: 1 }, e: { r: currentRow, c: 4 } });
+            merges.push({ s: { r: currentRow, c: 5 }, e: { r: currentRow, c: 8 } });
+            currentRow++;
+            
+            sheetData.push(['', '合计', '管理', '专业技术', '工勤', '合计', '管理', '专业技术', '工勤']);
+            currentRow++;
+            
+            const staffingTableDiv = document.getElementById('staffingTable');
+            if (staffingTableDiv) {
+                const staffingTable1 = staffingTableDiv.querySelector('table:nth-child(2)');
+                if (staffingTable1) {
+                    const staffingRows1 = staffingTable1.querySelectorAll('tbody tr');
+                    if (staffingRows1.length > 0) {
+                        staffingRows1.forEach(row => {
+                            const inputs = row.querySelectorAll('input');
+                            const rowData = Array.from(inputs).map(input => input.value);
+                            sheetData.push(rowData);
+                            currentRow++;
+                        });
+                    }
+                }
+                
+                sheetData.push(new Array(9).fill(''));
+                currentRow++;
+                
+                sheetData.push(['', '实有人员情况', '', '', '', '', '', '', '', '', '', '']);
+                merges.push({ s: { r: currentRow, c: 1 }, e: { r: currentRow, c: 11 } });
+                currentRow++;
+                
+                sheetData.push(['总计', '省编', '', '', '', '地方编', '', '', '', '', '', '']);
+                merges.push({ s: { r: currentRow, c: 1 }, e: { r: currentRow, c: 4 } });
+                merges.push({ s: { r: currentRow, c: 5 }, e: { r: currentRow, c: 8 } });
+                merges.push({ s: { r: currentRow, c: 9 }, e: { r: currentRow, c: 11 } });
+                currentRow++;
+                
+                sheetData.push(['', '合计', '管理', '专业技术', '工勤', '合计', '管理', '专业技术', '工勤', '离退休', '临时工', '借调']);
+                currentRow++;
+                
+                const staffingTable2 = staffingTableDiv.querySelector('table:nth-child(3)');
+                if (staffingTable2) {
+                    const staffingRows2 = staffingTable2.querySelectorAll('tbody tr');
+                    if (staffingRows2.length > 0) {
+                        staffingRows2.forEach(row => {
+                            const inputs = row.querySelectorAll('input');
+                            const rowData = Array.from(inputs).map(input => input.value);
+                            sheetData.push(rowData);
+                            currentRow++;
+                        });
+                    }
+                }
+            }
+            
+            sheetData.push(new Array(12).fill(''));
+            currentRow++;
+            
+            sheetData.push(['领导与机构情况']);
+            merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 5 } });
+            currentRow++;
+            
+            sheetData.push(['领导班子', '', '', '', '', '']);
+            merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 5 } });
+            currentRow++;
+            
+            sheetData.push(['正职', '', '', '副职', '', '']);
+            merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 2 } });
+            merges.push({ s: { r: currentRow, c: 3 }, e: { r: currentRow, c: 5 } });
+            currentRow++;
+            
+            sheetData.push(['级别', '职数', '实配', '级别', '职数', '实配']);
+            currentRow++;
+            
+            const leadershipTableDiv = document.getElementById('leadershipTable');
+            if (leadershipTableDiv) {
+                const leadershipTable1 = leadershipTableDiv.querySelector('table:nth-child(2)');
+                if (leadershipTable1) {
+                    const leadershipRows1 = leadershipTable1.querySelectorAll('tbody tr');
+                    if (leadershipRows1.length > 0) {
+                        leadershipRows1.forEach(row => {
+                            const inputs = row.querySelectorAll('input');
+                            const rowData = Array.from(inputs).map(input => input.value);
+                            sheetData.push(rowData);
+                            currentRow++;
+                        });
+                    }
+                }
+                
+                sheetData.push(new Array(6).fill(''));
+                currentRow++;
+                
+                sheetData.push(['内设机构', '', '', '']);
+                merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 3 } });
+                currentRow++;
+                
+                sheetData.push(['级别', '机构数', '职数', '实配']);
+                currentRow++;
+                
+                const leadershipTable2 = leadershipTableDiv.querySelector('table:nth-child(3)');
+                if (leadershipTable2) {
+                    const leadershipRows2 = leadershipTable2.querySelectorAll('tbody tr');
+                    if (leadershipRows2.length > 0) {
+                        leadershipRows2.forEach(row => {
+                            const inputs = row.querySelectorAll('input');
+                            const rowData = Array.from(inputs).map(input => input.value);
+                            const fullRowData = [...rowData, '', ''];
+                            sheetData.push(fullRowData);
+                            currentRow++;
+                        });
+                    }
+                }
+                
+                sheetData.push(new Array(6).fill(''));
+                currentRow++;
+                
+                sheetData.push(['职称情况', '', '', '', '']);
+                merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 4 } });
+                currentRow++;
+                
+                sheetData.push(['合计', '正高', '副高', '中级', '初级']);
+                currentRow++;
+                
+                const leadershipTable3 = leadershipTableDiv.querySelector('table:nth-child(4)');
+                if (leadershipTable3) {
+                    const leadershipRows3 = leadershipTable3.querySelectorAll('tbody tr');
+                    if (leadershipRows3.length > 0) {
+                        leadershipRows3.forEach(row => {
+                            const inputs = row.querySelectorAll('input');
+                            const rowData = Array.from(inputs).map(input => input.value);
+                            const fullRowData = [...rowData, ''];
+                            sheetData.push(fullRowData);
+                            currentRow++;
+                        });
+                    }
+                }
+            }
+            
+            const ws = XLSX.utils.aoa_to_sheet(sheetData);
+            
+            ws['!merges'] = merges;
+            
+            ws['!cols'] = [12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12];
+            
+            return ws;
+        }
+        
+        function processTable3Sheet() {
+            const sheetData = [];
+            let merges = [];
+            let currentRow = 0;
+            
+            sheetData.push(['中波业务']);
+            merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 4 } });
+            currentRow++;
+            
+            const mwHeaders = ['频率（KHz）', '功率（Kw）', '节目', '经费来源及额度（万元）', '是否有备机'];
+            sheetData.push(mwHeaders);
+            currentRow++;
+            
+            const mwRows = document.querySelectorAll('#mwTableBody tr');
+            mwRows.forEach(row => {
+                const inputs = row.querySelectorAll('input, select');
+                const rowData = Array.from(inputs).slice(1).map(input => input.value);
+                sheetData.push(rowData);
+                currentRow++;
+            });
+            
+            sheetData.push(new Array(5).fill(''));
+            currentRow++;
+            
+            sheetData.push(['地面数字电视']);
+            merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 3 } });
+            currentRow++;
+            
+            const dttHeaders = ['频道', '节目', '经费来源及额度（万元）', '是否有备机'];
+            sheetData.push(dttHeaders);
+            currentRow++;
+            
+            const dttRows = document.querySelectorAll('#dttTableBody tr');
+            dttRows.forEach(row => {
+                const inputs = row.querySelectorAll('input, select');
+                const rowData = Array.from(inputs).slice(1).map(input => input.value);
+                const fullRowData = [...rowData, ''];
+                sheetData.push(fullRowData);
+                currentRow++;
+            });
+            
+            sheetData.push(new Array(5).fill(''));
+            currentRow++;
+            
+            sheetData.push(['调频广播业务']);
+            merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 4 } });
+            currentRow++;
+            
+            const fmHeaders = ['频率（MHz）', '功率（Kw）', '节目', '经费来源及额度（万元）', '是否有备机'];
+            sheetData.push(fmHeaders);
+            currentRow++;
+            
+            const fmRows = document.querySelectorAll('#fmTableBody tr');
+            fmRows.forEach(row => {
+                const inputs = row.querySelectorAll('input, select');
+                const rowData = Array.from(inputs).slice(1).map(input => input.value);
+                sheetData.push(rowData);
+                currentRow++;
+            });
+            
+            sheetData.push(new Array(5).fill(''));
+            currentRow++;
+            
+            sheetData.push(['微波业务-微波（7-8GHz、11GHz）']);
+            merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 4 } });
+            currentRow++;
+            
+            const microwaveHeaders = ['传输方向', '', '', '', ''];
+            sheetData.push(microwaveHeaders);
+            currentRow++;
+            
+            const microwaveRows = document.querySelectorAll('#microwaveTableBody tr');
+            microwaveRows.forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                const rowData = Array.from(inputs).slice(1).map(input => input.value);
+                const fullRowData = [...rowData, '', '', '', ''];
+                sheetData.push(fullRowData);
+                currentRow++;
+            });
+            
+            sheetData.push(['']);
+            sheetData.push(['经费来源及额度（万元）', '', '', '', '']);
+            merges.push({ s: { r: currentRow + 1, c: 0 }, e: { r: currentRow + 1, c: 4 } });
+            currentRow += 2;
+            
+            const microwaveFunds = document.getElementById('microwaveFunds')?.value.trim() || '';
+            sheetData.push([microwaveFunds, '', '', '', '']);
+            currentRow++;
+            
+            sheetData.push(new Array(5).fill(''));
+            currentRow++;
+            
+            sheetData.push(['数字音频广播(CDR)']);
+            merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 4 } });
+            currentRow++;
+            
+            const cdrHeaders = ['频率（MHz）', '功率（Kw）', '节目', '经费来源及额度（万元）', '是否有备机'];
+            sheetData.push(cdrHeaders);
+            currentRow++;
+            
+            const cdrRows = document.querySelectorAll('#cdrTableBody tr');
+            cdrRows.forEach(row => {
+                const inputs = row.querySelectorAll('input, select');
+                const rowData = Array.from(inputs).slice(1).map(input => input.value);
+                sheetData.push(rowData);
+                currentRow++;
+            });
+            
+            sheetData.push(new Array(5).fill(''));
+            currentRow++;
+            
+            sheetData.push(['发射塔信息']);
+            merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 3 } });
+            currentRow++;
+            
+            const towerHeaders = ['塔型', '塔高（米）', '资产归属', '用途'];
+            sheetData.push(towerHeaders);
+            currentRow++;
+            
+            const towerRows = document.querySelectorAll('#towerTableBody tr');
+            towerRows.forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                const rowData = Array.from(inputs).slice(1).map(input => input.value);
+                const fullRowData = [...rowData, ''];
+                sheetData.push(fullRowData);
+                currentRow++;
+            });
+            
+            sheetData.push(new Array(5).fill(''));
+            currentRow++;
+            
+            sheetData.push(['电力情况']);
+            merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 3 } });
+            currentRow++;
+            
+            const powerHeaders = ['接入外电数量（路）', '自行维护', '电业局维护', '柴发及UPS情况'];
+            sheetData.push(powerHeaders);
+            currentRow++;
+            
+            const powerRow = document.querySelector('#powerTableBody tr');
+            if (powerRow) {
+                const inputs = powerRow.querySelectorAll('input, select');
+                const rowData = Array.from(inputs).map(input => input.value);
+                const fullRowData = [...rowData, ''];
+                sheetData.push(fullRowData);
+                currentRow++;
+            }
+            
+            sheetData.push(new Array(5).fill(''));
+            currentRow++;
+            
+            sheetData.push(['是否代维其他业务']);
+            merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 1 } });
+            currentRow++;
+            
+            const maintenanceHeaders = ['是否代维', '代维业务详情（如移动、联通、电信等代维业务）'];
+            sheetData.push(maintenanceHeaders);
+            currentRow++;
+            
+            const maintenanceSelectVal = document.getElementById('maintenanceSelect')?.value || '';
+            const maintenanceDetailsVal = document.getElementById('maintenanceDetails')?.value.trim() || '';
+            sheetData.push([maintenanceSelectVal, maintenanceDetailsVal, '', '', '']);
+            currentRow++;
+            
+            sheetData.push(['']);
+            currentRow++;
+            
+            sheetData.push(['是否下辖二级台站']);
+            merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 1 } });
+            currentRow++;
+            
+            const substationHeaders = ['是否下辖', '二级台站名称'];
+            sheetData.push(substationHeaders);
+            currentRow++;
+            
+            const substationSelectVal = document.getElementById('substationSelect')?.value || '';
+            const substationNameVal = document.getElementById('substationName')?.value.trim() || '';
+            sheetData.push([substationSelectVal, substationNameVal, '', '', '']);
+            currentRow++;
+            
+            const ws = XLSX.utils.aoa_to_sheet(sheetData);
+            
+            ws['!merges'] = merges;
+            
+            ws['!cols'] = [12, 10, 20, 25, 12];
+            
+            return ws;
+        }
+        
+        function showMessage(text, type) {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = text;
+            messageEl.classList.remove('hidden', 'bg-success', 'bg-warning', 'bg-danger', 'text-white');
+            
+            switch(type) {
+                case 'success':
+                    messageEl.classList.add('bg-success', 'text-white');
+                    break;
+                case 'warning':
+                    messageEl.classList.add('bg-warning', 'text-white');
+                    break;
+                case 'error':
+                    messageEl.classList.add('bg-danger', 'text-white');
+                    break;
+            }
+            
+            setTimeout(() => {
+                messageEl.classList.add('hidden');
+            }, 3000);
+        }
+        
+    </script>
+</body>
+</html>
