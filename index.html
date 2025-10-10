@@ -157,9 +157,41 @@
         
         <div class="flex justify-between items-center mb-6">
             <div id="contactInfo" class="text-lg text-dark font-medium">省局联系人：鲍鹏，0451-82898466</div>
-            <button id="exportExcel" class="bg-success hover:bg-success/90 text-white px-6 py-2 rounded-lg shadow-md flex items-center transition-custom">
-                <i class="fa fa-file-excel-o mr-2"></i>导出
-            </button>
+            <div class="flex items-center gap-6">
+                <div id="table1Contacts" class="flex items-center gap-4">
+                    <div class="flex items-center">
+                        <span class="text-dark mr-2">财务资产负责人：</span>
+                        <input type="text" id="financialManager" class="underline-input focus:ring-0 focus:border-primary" placeholder="请输入负责人姓名">
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-dark mr-2">联系方式：</span>
+                        <input type="text" id="financialContact" class="underline-input focus:ring-0 focus:border-primary" placeholder="请输入联系方式">
+                    </div>
+                </div>
+                <div id="table2Contacts" class="flex items-center gap-4 hidden">
+                    <div class="flex items-center">
+                        <span class="text-dark mr-2">人事编制负责人：</span>
+                        <input type="text" id="staffingManager" class="underline-input focus:ring-0 focus:border-primary" placeholder="请输入负责人姓名">
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-dark mr-2">联系方式：</span>
+                        <input type="text" id="staffingContact" class="underline-input focus:ring-0 focus:border-primary" placeholder="请输入联系方式">
+                    </div>
+                </div>
+                <div id="table3Contacts" class="flex items-center gap-4 hidden">
+                    <div class="flex items-center">
+                        <span class="text-dark mr-2">业务信息负责人：</span>
+                        <input type="text" id="businessManager" class="underline-input focus:ring-0 focus:border-primary" placeholder="请输入负责人姓名">
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-dark mr-2">联系方式：</span>
+                        <input type="text" id="businessContact" class="underline-input focus:ring-0 focus:border-primary" placeholder="请输入联系方式">
+                    </div>
+                </div>
+                <button id="exportExcel" class="bg-success hover:bg-success/90 text-white px-6 py-2 rounded-lg shadow-md flex items-center transition-custom">
+                    <i class="fa fa-file-excel-o mr-2"></i>导出
+                </button>
+            </div>
         </div>
         
         <div id="message" class="mt-4 p-4 rounded-lg hidden"></div>
@@ -1364,6 +1396,10 @@
             
             const contactInfo = document.getElementById('contactInfo');
             
+            const table1Contacts = document.getElementById('table1Contacts');
+            const table2Contacts = document.getElementById('table2Contacts');
+            const table3Contacts = document.getElementById('table3Contacts');
+            
             btnTable1.addEventListener('click', function() {
                 btnTable1.className = 'bg-primary text-white px-6 py-2 rounded-lg shadow-md flex items-center transition-custom';
                 btnTable2.className = 'bg-gray-200 hover:bg-gray-300 text-dark px-6 py-2 rounded-lg shadow-md flex items-center transition-custom';
@@ -1372,6 +1408,10 @@
                 table1Content.classList.remove('hidden');
                 table2Content.classList.add('hidden');
                 table3Content.classList.add('hidden');
+                
+                table1Contacts.classList.remove('hidden');
+                table2Contacts.classList.add('hidden');
+                table3Contacts.classList.add('hidden');
                 
                 contactInfo.textContent = '省局联系人：鲍鹏，0451-82898466';
             });
@@ -1385,6 +1425,10 @@
                 table2Content.classList.remove('hidden');
                 table3Content.classList.add('hidden');
                 
+                table1Contacts.classList.add('hidden');
+                table2Contacts.classList.remove('hidden');
+                table3Contacts.classList.add('hidden');
+                
                 contactInfo.textContent = '省局联系人：孙万军，0451-82898557';
             });
             
@@ -1396,6 +1440,10 @@
                 table1Content.classList.add('hidden');
                 table2Content.classList.add('hidden');
                 table3Content.classList.remove('hidden');
+                
+                table1Contacts.classList.add('hidden');
+                table2Contacts.classList.add('hidden');
+                table3Contacts.classList.remove('hidden');
                 
                 contactInfo.textContent = '省局联系人：徐桂斌，0451-82898412';
             });
@@ -1426,6 +1474,63 @@
                 hasEmptyInput = true;
                 firstEmptyInput = reportingUnit;
                 firstEmptyTab = 1;
+            }
+            
+            const financialManager = document.getElementById('financialManager');
+            const financialContact = document.getElementById('financialContact');
+            if (!financialManager.value.trim()) {
+                financialManager.classList.add('input-error');
+                hasEmptyInput = true;
+                if (!firstEmptyInput) {
+                    firstEmptyInput = financialManager;
+                    firstEmptyTab = 1;
+                }
+            }
+            if (!financialContact.value.trim()) {
+                financialContact.classList.add('input-error');
+                hasEmptyInput = true;
+                if (!firstEmptyInput) {
+                    firstEmptyInput = financialContact;
+                    firstEmptyTab = 1;
+                }
+            }
+            
+            const staffingManager = document.getElementById('staffingManager');
+            const staffingContact = document.getElementById('staffingContact');
+            if (!staffingManager.value.trim()) {
+                staffingManager.classList.add('input-error');
+                hasEmptyInput = true;
+                if (!firstEmptyInput) {
+                    firstEmptyInput = staffingManager;
+                    firstEmptyTab = 2;
+                }
+            }
+            if (!staffingContact.value.trim()) {
+                staffingContact.classList.add('input-error');
+                hasEmptyInput = true;
+                if (!firstEmptyInput) {
+                    firstEmptyInput = staffingContact;
+                    firstEmptyTab = 2;
+                }
+            }
+            
+            const businessManager = document.getElementById('businessManager');
+            const businessContact = document.getElementById('businessContact');
+            if (!businessManager.value.trim()) {
+                businessManager.classList.add('input-error');
+                hasEmptyInput = true;
+                if (!firstEmptyInput) {
+                    firstEmptyInput = businessManager;
+                    firstEmptyTab = 3;
+                }
+            }
+            if (!businessContact.value.trim()) {
+                businessContact.classList.add('input-error');
+                hasEmptyInput = true;
+                if (!firstEmptyInput) {
+                    firstEmptyInput = businessContact;
+                    firstEmptyTab = 3;
+                }
             }
             
             const table1EmptyInput = validateTable1Inputs();
@@ -1773,6 +1878,13 @@
             let merges = [];
             let currentRow = 0;
             
+            const financialManager = document.getElementById('financialManager').value;
+            const financialContact = document.getElementById('financialContact').value;
+            sheetData.push(['财务资产负责人', financialManager]);
+            sheetData.push(['联系方式', financialContact]);
+            sheetData.push(new Array(7).fill(''));
+            currentRow += 3;
+            
             sheetData.push(['预算级次及相关信息']);
             merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 6 } });
             currentRow++;
@@ -1882,6 +1994,13 @@
             const sheetData = [];
             let merges = [];
             let currentRow = 0;
+            
+            const staffingManager = document.getElementById('staffingManager').value;
+            const staffingContact = document.getElementById('staffingContact').value;
+            sheetData.push(['人事编制负责人', staffingManager]);
+            sheetData.push(['联系方式', staffingContact]);
+            sheetData.push(new Array(4).fill(''));
+            currentRow += 3;
             
             sheetData.push(['基本信息']);
             merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 3 } });
@@ -2075,6 +2194,13 @@
             const sheetData = [];
             let merges = [];
             let currentRow = 0;
+            
+            const businessManager = document.getElementById('businessManager').value;
+            const businessContact = document.getElementById('businessContact').value;
+            sheetData.push(['业务信息负责人', businessManager]);
+            sheetData.push(['联系方式', businessContact]);
+            sheetData.push(new Array(5).fill(''));
+            currentRow += 3;
             
             sheetData.push(['中波业务']);
             merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 4 } });
