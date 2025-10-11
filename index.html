@@ -866,6 +866,9 @@
             document.getElementById('exportExcel').addEventListener('click', exportToExcel);
             
             setupCommonEventListeners();
+            
+            // 初始化微波业务经费来源输入框状态
+            updateMicrowaveFundsStatus();
         });
         
         function initializeFinancialTable() {
@@ -1157,6 +1160,11 @@
             
             if (newRow) {
                 tableBody.appendChild(newRow);
+                
+                // 如果是微波业务表格，更新经费来源输入框状态
+                if (tableType === 'microwave') {
+                    updateMicrowaveFundsStatus();
+                }
             }
         }
         
@@ -1341,8 +1349,16 @@
                 checkbox.closest('tr').remove();
             });
             
-            if (tableBody.children.length === 0) {
+            // 对于业务信息标签页的表格，允许删除最后一行而不自动添加新行
+            // 业务信息表格类型包括: mw, dtt, fm, microwave, cdr, tower, power
+            const businessTables = ['mw', 'dtt', 'fm', 'microwave', 'cdr', 'tower', 'power'];
+            if (tableBody.children.length === 0 && !businessTables.includes(tableType)) {
                 addNewRow(tableType);
+            }
+            
+            // 如果是微波业务表格，更新经费来源输入框状态
+            if (tableType === 'microwave') {
+                updateMicrowaveFundsStatus();
             }
         }
         
@@ -1359,6 +1375,13 @@
             input.required = true;
             td.appendChild(input);
             return td;
+        }
+        
+        // 更新微波业务经费来源输入框的禁用状态
+        function updateMicrowaveFundsStatus() {
+            const microwaveRows = document.querySelectorAll('#microwaveTableBody tr');
+            const microwaveFunds = document.getElementById('microwaveFunds');
+            microwaveFunds.disabled = microwaveRows.length === 0;
         }
         
         function createSelectCell(rowIndex, tableType, columnName, options) {
@@ -1476,6 +1499,7 @@
                 firstEmptyTab = 1;
             }
             
+            // 验证财务资产负责人信息
             const financialManager = document.getElementById('financialManager');
             const financialContact = document.getElementById('financialContact');
             if (!financialManager.value.trim()) {
@@ -1495,6 +1519,7 @@
                 }
             }
             
+            // 验证人事编制负责人信息
             const staffingManager = document.getElementById('staffingManager');
             const staffingContact = document.getElementById('staffingContact');
             if (!staffingManager.value.trim()) {
@@ -1514,6 +1539,7 @@
                 }
             }
             
+            // 验证业务信息负责人信息
             const businessManager = document.getElementById('businessManager');
             const businessContact = document.getElementById('businessContact');
             if (!businessManager.value.trim()) {
@@ -1878,6 +1904,7 @@
             let merges = [];
             let currentRow = 0;
             
+            // 添加负责人信息
             const financialManager = document.getElementById('financialManager').value;
             const financialContact = document.getElementById('financialContact').value;
             sheetData.push(['财务资产负责人', financialManager]);
@@ -1995,6 +2022,7 @@
             let merges = [];
             let currentRow = 0;
             
+            // 添加负责人信息
             const staffingManager = document.getElementById('staffingManager').value;
             const staffingContact = document.getElementById('staffingContact').value;
             sheetData.push(['人事编制负责人', staffingManager]);
@@ -2195,6 +2223,7 @@
             let merges = [];
             let currentRow = 0;
             
+            // 添加负责人信息
             const businessManager = document.getElementById('businessManager').value;
             const businessContact = document.getElementById('businessContact').value;
             sheetData.push(['业务信息负责人', businessManager]);
@@ -2202,131 +2231,143 @@
             sheetData.push(new Array(5).fill(''));
             currentRow += 3;
             
-            sheetData.push(['中波业务']);
-            merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 4 } });
-            currentRow++;
-            
-            const mwHeaders = ['频率（KHz）', '功率（Kw）', '节目', '经费来源及额度（万元）', '是否有备机'];
-            sheetData.push(mwHeaders);
-            currentRow++;
-            
             const mwRows = document.querySelectorAll('#mwTableBody tr');
-            mwRows.forEach(row => {
-                const inputs = row.querySelectorAll('input, select');
-                const rowData = Array.from(inputs).slice(1).map(input => input.value);
-                sheetData.push(rowData);
+            if (mwRows.length > 0) {
+                sheetData.push(['中波业务']);
+                merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 4 } });
                 currentRow++;
-            });
-            
-            sheetData.push(new Array(5).fill(''));
-            currentRow++;
-            
-            sheetData.push(['地面数字电视']);
-            merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 3 } });
-            currentRow++;
-            
-            const dttHeaders = ['频道', '节目', '经费来源及额度（万元）', '是否有备机'];
-            sheetData.push(dttHeaders);
-            currentRow++;
+                
+                const mwHeaders = ['频率（KHz）', '功率（Kw）', '节目', '经费来源及额度（万元）', '是否有备机'];
+                sheetData.push(mwHeaders);
+                currentRow++;
+                
+                mwRows.forEach(row => {
+                    const inputs = row.querySelectorAll('input, select');
+                    const rowData = Array.from(inputs).slice(1).map(input => input.value);
+                    sheetData.push(rowData);
+                    currentRow++;
+                });
+                
+                sheetData.push(new Array(5).fill(''));
+                currentRow++;
+            }
             
             const dttRows = document.querySelectorAll('#dttTableBody tr');
-            dttRows.forEach(row => {
-                const inputs = row.querySelectorAll('input, select');
-                const rowData = Array.from(inputs).slice(1).map(input => input.value);
-                const fullRowData = [...rowData, ''];
-                sheetData.push(fullRowData);
+            if (dttRows.length > 0) {
+                sheetData.push(['地面数字电视']);
+                merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 3 } });
                 currentRow++;
-            });
-            
-            sheetData.push(new Array(5).fill(''));
-            currentRow++;
-            
-            sheetData.push(['调频广播业务']);
-            merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 4 } });
-            currentRow++;
-            
-            const fmHeaders = ['频率（MHz）', '功率（Kw）', '节目', '经费来源及额度（万元）', '是否有备机'];
-            sheetData.push(fmHeaders);
-            currentRow++;
+                
+                const dttHeaders = ['频道', '节目', '经费来源及额度（万元）', '是否有备机'];
+                sheetData.push(dttHeaders);
+                currentRow++;
+                
+                dttRows.forEach(row => {
+                    const inputs = row.querySelectorAll('input, select');
+                    const rowData = Array.from(inputs).slice(1).map(input => input.value);
+                    const fullRowData = [...rowData, ''];
+                    sheetData.push(fullRowData);
+                    currentRow++;
+                });
+                
+                sheetData.push(new Array(5).fill(''));
+                currentRow++;
+            }
             
             const fmRows = document.querySelectorAll('#fmTableBody tr');
-            fmRows.forEach(row => {
-                const inputs = row.querySelectorAll('input, select');
-                const rowData = Array.from(inputs).slice(1).map(input => input.value);
-                sheetData.push(rowData);
+            if (fmRows.length > 0) {
+                sheetData.push(['调频广播业务']);
+                merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 4 } });
                 currentRow++;
-            });
-            
-            sheetData.push(new Array(5).fill(''));
-            currentRow++;
-            
-            sheetData.push(['微波业务-微波（7-8GHz、11GHz）']);
-            merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 4 } });
-            currentRow++;
-            
-            const microwaveHeaders = ['传输方向', '', '', '', ''];
-            sheetData.push(microwaveHeaders);
-            currentRow++;
+                
+                const fmHeaders = ['频率（MHz）', '功率（Kw）', '节目', '经费来源及额度（万元）', '是否有备机'];
+                sheetData.push(fmHeaders);
+                currentRow++;
+                
+                fmRows.forEach(row => {
+                    const inputs = row.querySelectorAll('input, select');
+                    const rowData = Array.from(inputs).slice(1).map(input => input.value);
+                    sheetData.push(rowData);
+                    currentRow++;
+                });
+                
+                sheetData.push(new Array(5).fill(''));
+                currentRow++;
+            }
             
             const microwaveRows = document.querySelectorAll('#microwaveTableBody tr');
-            microwaveRows.forEach(row => {
-                const inputs = row.querySelectorAll('input');
-                const rowData = Array.from(inputs).slice(1).map(input => input.value);
-                const fullRowData = [...rowData, '', '', '', ''];
-                sheetData.push(fullRowData);
+            if (microwaveRows.length > 0) {
+                sheetData.push(['微波业务-微波（7-8GHz、11GHz）']);
+                merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 4 } });
                 currentRow++;
-            });
-            
-            sheetData.push(['']);
-            sheetData.push(['经费来源及额度（万元）', '', '', '', '']);
-            merges.push({ s: { r: currentRow + 1, c: 0 }, e: { r: currentRow + 1, c: 4 } });
-            currentRow += 2;
-            
-            const microwaveFunds = document.getElementById('microwaveFunds')?.value.trim() || '';
-            sheetData.push([microwaveFunds, '', '', '', '']);
-            currentRow++;
-            
-            sheetData.push(new Array(5).fill(''));
-            currentRow++;
-            
-            sheetData.push(['数字音频广播(CDR)']);
-            merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 4 } });
-            currentRow++;
-            
-            const cdrHeaders = ['频率（MHz）', '功率（Kw）', '节目', '经费来源及额度（万元）', '是否有备机'];
-            sheetData.push(cdrHeaders);
-            currentRow++;
+                
+                const microwaveHeaders = ['传输方向', '', '', '', ''];
+                sheetData.push(microwaveHeaders);
+                currentRow++;
+                
+                microwaveRows.forEach(row => {
+                    const inputs = row.querySelectorAll('input');
+                    const rowData = Array.from(inputs).slice(1).map(input => input.value);
+                    const fullRowData = [...rowData, '', '', '', ''];
+                    sheetData.push(fullRowData);
+                    currentRow++;
+                });
+                
+                sheetData.push(['']);
+                sheetData.push(['经费来源及额度（万元）', '', '', '', '']);
+                merges.push({ s: { r: currentRow + 1, c: 0 }, e: { r: currentRow + 1, c: 4 } });
+                currentRow += 2;
+                
+                const microwaveFunds = document.getElementById('microwaveFunds')?.value.trim() || '';
+                sheetData.push([microwaveFunds, '', '', '', '']);
+                currentRow++;
+                
+                sheetData.push(new Array(5).fill(''));
+                currentRow++;
+            }
             
             const cdrRows = document.querySelectorAll('#cdrTableBody tr');
-            cdrRows.forEach(row => {
-                const inputs = row.querySelectorAll('input, select');
-                const rowData = Array.from(inputs).slice(1).map(input => input.value);
-                sheetData.push(rowData);
+            if (cdrRows.length > 0) {
+                sheetData.push(['数字音频广播(CDR)']);
+                merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 4 } });
                 currentRow++;
-            });
-            
-            sheetData.push(new Array(5).fill(''));
-            currentRow++;
-            
-            sheetData.push(['发射塔信息']);
-            merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 3 } });
-            currentRow++;
-            
-            const towerHeaders = ['塔型', '塔高（米）', '资产归属', '用途'];
-            sheetData.push(towerHeaders);
-            currentRow++;
+                
+                const cdrHeaders = ['频率（MHz）', '功率（Kw）', '节目', '经费来源及额度（万元）', '是否有备机'];
+                sheetData.push(cdrHeaders);
+                currentRow++;
+                
+                cdrRows.forEach(row => {
+                    const inputs = row.querySelectorAll('input, select');
+                    const rowData = Array.from(inputs).slice(1).map(input => input.value);
+                    sheetData.push(rowData);
+                    currentRow++;
+                });
+                
+                sheetData.push(new Array(5).fill(''));
+                currentRow++;
+            }
             
             const towerRows = document.querySelectorAll('#towerTableBody tr');
-            towerRows.forEach(row => {
-                const inputs = row.querySelectorAll('input');
-                const rowData = Array.from(inputs).slice(1).map(input => input.value);
-                const fullRowData = [...rowData, ''];
-                sheetData.push(fullRowData);
+            if (towerRows.length > 0) {
+                sheetData.push(['发射塔信息']);
+                merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 3 } });
                 currentRow++;
-            });
-            
-            sheetData.push(new Array(5).fill(''));
-            currentRow++;
+                
+                const towerHeaders = ['塔型', '塔高（米）', '资产归属', '用途'];
+                sheetData.push(towerHeaders);
+                currentRow++;
+                
+                towerRows.forEach(row => {
+                    const inputs = row.querySelectorAll('input');
+                    const rowData = Array.from(inputs).slice(1).map(input => input.value);
+                    const fullRowData = [...rowData, ''];
+                    sheetData.push(fullRowData);
+                    currentRow++;
+                });
+                
+                sheetData.push(new Array(5).fill(''));
+                currentRow++;
+            }
             
             sheetData.push(['电力情况']);
             merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 3 } });
