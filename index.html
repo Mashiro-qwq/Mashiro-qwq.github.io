@@ -867,7 +867,6 @@
             
             setupCommonEventListeners();
             
-            // 初始化微波业务经费来源输入框状态
             updateMicrowaveFundsStatus();
         });
         
@@ -1161,7 +1160,6 @@
             if (newRow) {
                 tableBody.appendChild(newRow);
                 
-                // 如果是微波业务表格，更新经费来源输入框状态
                 if (tableType === 'microwave') {
                     updateMicrowaveFundsStatus();
                 }
@@ -1349,14 +1347,11 @@
                 checkbox.closest('tr').remove();
             });
             
-            // 对于业务信息标签页的表格，允许删除最后一行而不自动添加新行
-            // 业务信息表格类型包括: mw, dtt, fm, microwave, cdr, tower, power
             const businessTables = ['mw', 'dtt', 'fm', 'microwave', 'cdr', 'tower', 'power'];
             if (tableBody.children.length === 0 && !businessTables.includes(tableType)) {
                 addNewRow(tableType);
             }
             
-            // 如果是微波业务表格，更新经费来源输入框状态
             if (tableType === 'microwave') {
                 updateMicrowaveFundsStatus();
             }
@@ -1377,7 +1372,6 @@
             return td;
         }
         
-        // 更新微波业务经费来源输入框的禁用状态
         function updateMicrowaveFundsStatus() {
             const microwaveRows = document.querySelectorAll('#microwaveTableBody tr');
             const microwaveFunds = document.getElementById('microwaveFunds');
@@ -1499,7 +1493,6 @@
                 firstEmptyTab = 1;
             }
             
-            // 验证财务资产负责人信息
             const financialManager = document.getElementById('financialManager');
             const financialContact = document.getElementById('financialContact');
             if (!financialManager.value.trim()) {
@@ -1519,7 +1512,6 @@
                 }
             }
             
-            // 验证人事编制负责人信息
             const staffingManager = document.getElementById('staffingManager');
             const staffingContact = document.getElementById('staffingContact');
             if (!staffingManager.value.trim()) {
@@ -1539,7 +1531,6 @@
                 }
             }
             
-            // 验证业务信息负责人信息
             const businessManager = document.getElementById('businessManager');
             const businessContact = document.getElementById('businessContact');
             if (!businessManager.value.trim()) {
@@ -1904,7 +1895,6 @@
             let merges = [];
             let currentRow = 0;
             
-            // 添加负责人信息
             const financialManager = document.getElementById('financialManager').value;
             const financialContact = document.getElementById('financialContact').value;
             sheetData.push(['财务资产负责人', financialManager]);
@@ -2022,7 +2012,6 @@
             let merges = [];
             let currentRow = 0;
             
-            // 添加负责人信息
             const staffingManager = document.getElementById('staffingManager').value;
             const staffingContact = document.getElementById('staffingContact').value;
             sheetData.push(['人事编制负责人', staffingManager]);
@@ -2223,7 +2212,6 @@
             let merges = [];
             let currentRow = 0;
             
-            // 添加负责人信息
             const businessManager = document.getElementById('businessManager').value;
             const businessContact = document.getElementById('businessContact').value;
             sheetData.push(['业务信息负责人', businessManager]);
