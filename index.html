@@ -140,6 +140,14 @@
             <div class="flex justify-center items-center mb-8 text-lg">
                 <span class="text-dark mr-2">填报单位：</span>
                 <input type="text" id="reportingUnit" class="underline-input focus:ring-0 focus:border-primary" placeholder="请输入单位名称">
+                <select id="stationType" class="ml-4 border border-gray-300 rounded-md px-3 py-1 text-dark bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary">
+                    <option value="independent">独立台站</option>
+                    <option value="secondary">二级台站</option>
+                </select>
+                <div id="parentStationContainer" class="hidden ml-4">
+                    <span class="text-dark mr-2">上级台站名称：</span>
+                    <input type="text" id="parentStationName" class="underline-input focus:ring-0 focus:border-primary" placeholder="请输入上级台站名称">
+                </div>
             </div>
             
             <div class="flex justify-center gap-4 mb-8">
@@ -324,6 +332,7 @@
                         <tr class="bg-gray-50">
                             <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">单位级别</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">隶属关系</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">是否无人值守</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">是否独立法人</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">法人证书号</th>
                         </tr>
@@ -335,6 +344,13 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <input type="text" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <select id="isUnattended" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
+                                    <option value="">请选择</option>
+                                    <option value="有人值守">有人值守</option>
+                                    <option value="无人值守">无人值守</option>
+                                </select>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <select id="isLegalPerson" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom" required>
@@ -823,7 +839,7 @@
                         <option value="是">是</option>
                         <option value="否">否</option>
                     </select>
-                    <input type="text" id="substationName" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom bg-gray-50" placeholder="二级台站需按照此表单独填写一份" disabled>
+                    <input type="text" id="substationName" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-custom bg-gray-50" placeholder="请填写下辖的二级台站名称，每个二级台站都需按照此表单独填写一份" disabled>
                 </div>
             </div>
 
@@ -850,6 +866,53 @@
         let towerRowId = 1;
         
         document.addEventListener('DOMContentLoaded', function() {
+
+    const stationTypeSelect = document.getElementById('stationType');
+    const parentStationContainer = document.getElementById('parentStationContainer');
+    
+    stationTypeSelect.addEventListener('change', function() {
+        if (this.value === 'secondary') {
+            parentStationContainer.classList.remove('hidden');
+        } else {
+            parentStationContainer.classList.add('hidden');
+        }
+    });
+    
+    const isUnattended = document.getElementById('isUnattended');
+    const staffingTable = document.getElementById('staffingTable');
+    const leadershipTable = document.getElementById('leadershipTable');
+    
+    if (isUnattended) {
+        isUnattended.addEventListener('change', function() {
+            const isUnattendedValue = this.value;
+            
+            if (isUnattendedValue === '无人值守') {
+                if (staffingTable) {
+                    staffingTable.style.opacity = '0.5';
+                    staffingTable.style.pointerEvents = 'none';
+                    staffingTable.dataset.disabled = 'true';
+                }
+                
+                if (leadershipTable) {
+                    leadershipTable.style.opacity = '0.5';
+                    leadershipTable.style.pointerEvents = 'none';
+                    leadershipTable.dataset.disabled = 'true';
+                }
+            } else {
+                if (staffingTable) {
+                    staffingTable.style.opacity = '1';
+                    staffingTable.style.pointerEvents = 'auto';
+                    staffingTable.dataset.disabled = 'false';
+                }
+                
+                if (leadershipTable) {
+                    leadershipTable.style.opacity = '1';
+                    leadershipTable.style.pointerEvents = 'auto';
+                    leadershipTable.dataset.disabled = 'false';
+                }
+            }
+        });
+    }
             initializeFinancialTable();
             initializePropertyTable();
             initializeLandTable();
@@ -1277,7 +1340,7 @@
             checkboxCell.appendChild(checkbox);
             tr.appendChild(checkboxCell);
             
-            const directionCell = createInputCell(rowId, 'microwave', '传输方向', '首站');
+            const directionCell = createInputCell(rowId, 'microwave', '传输方向', '请写明每个和本台站相连的上一跳和下一跳传输方向，每个传输方向都需点击“添加行”后独立填写');
             tr.appendChild(directionCell);
             
             return tr;
@@ -1501,6 +1564,17 @@
                 firstEmptyTab = 1;
             }
             
+            const stationType = document.getElementById('stationType');
+            const parentStationName = document.getElementById('parentStationName');
+            if (stationType.value === 'secondary' && !parentStationName.value.trim()) {
+                parentStationName.classList.add('input-error');
+                hasEmptyInput = true;
+                if (!firstEmptyInput) {
+                    firstEmptyInput = parentStationName;
+                    firstEmptyTab = 1;
+                }
+            }
+            
             const financialManager = document.getElementById('financialManager');
             const financialContact = document.getElementById('financialContact');
             if (!financialManager.value.trim()) {
@@ -1679,25 +1753,46 @@
                 }
             }
             
-            const staffingInputs = document.querySelectorAll('#staffingTable input');
-            for (let input of staffingInputs) {
-                if (!input.value.trim()) {
-                    input.classList.add('input-error');
-                    if (!firstEmptyInput) firstEmptyInput = input;
-                } else {
-                    input.classList.remove('input-error');
-                }
+            const isUnattended = document.getElementById('isUnattended');
+            if (isUnattended && (isUnattended.value === '' || isUnattended.value === '请选择')) {
+                isUnattended.classList.add('input-error');
+                if (!firstEmptyInput) firstEmptyInput = isUnattended;
+            } else if (isUnattended) {
+                isUnattended.classList.remove('input-error');
             }
             
-            const leadershipInputs = document.querySelectorAll('#leadershipTable input, #leadershipTable select');
-            for (let input of leadershipInputs) {
-                if (input.tagName === 'SELECT' && (input.value === '' || input.value === '请选择')) {
-                    input.classList.add('input-error');
-                    if (!firstEmptyInput) firstEmptyInput = input;
-                } else if (input.tagName === 'INPUT' && !input.value.trim()) {
-                    input.classList.add('input-error');
-                    if (!firstEmptyInput) firstEmptyInput = input;
-                } else {
+            if (isUnattended && isUnattended.value !== '无人值守') {
+                const staffingInputs = document.querySelectorAll('#staffingTable input');
+                for (let input of staffingInputs) {
+                    if (!input.value.trim()) {
+                        input.classList.add('input-error');
+                        if (!firstEmptyInput) firstEmptyInput = input;
+                    } else {
+                        input.classList.remove('input-error');
+                    }
+                }
+                
+                const leadershipInputs = document.querySelectorAll('#leadershipTable input, #leadershipTable select');
+                for (let input of leadershipInputs) {
+                    if (input.tagName === 'SELECT' && (input.value === '' || input.value === '请选择')) {
+                        input.classList.add('input-error');
+                        if (!firstEmptyInput) firstEmptyInput = input;
+                    } else if (input.tagName === 'INPUT' && !input.value.trim()) {
+                        input.classList.add('input-error');
+                        if (!firstEmptyInput) firstEmptyInput = input;
+                    } else {
+                        input.classList.remove('input-error');
+                    }
+                }
+            }
+            else if (isUnattended && isUnattended.value === '无人值守') {
+                const staffingInputs = document.querySelectorAll('#staffingTable input');
+                for (let input of staffingInputs) {
+                    input.classList.remove('input-error');
+                }
+                
+                const leadershipInputs = document.querySelectorAll('#leadershipTable input, #leadershipTable select');
+                for (let input of leadershipInputs) {
                     input.classList.remove('input-error');
                 }
             }
@@ -1893,7 +1988,15 @@
             const table3Sheet = processTable3Sheet();
             XLSX.utils.book_append_sheet(wb, table3Sheet, '业务信息');
             
-            const fileName = `${reportingUnit}_黑龙江省广播电视无线发射台站调研表.xlsx`;
+            let fileName;
+            const stationType = document.getElementById('stationType').value;
+            
+            if (stationType === 'secondary') {
+                const parentStationName = document.getElementById('parentStationName').value || '未填写上级台站';
+                fileName = `${parentStationName}_${reportingUnit}_黑龙江省广播电视无线发射台站调研表.xlsx`;
+            } else {
+                fileName = `${reportingUnit}_黑龙江省广播电视无线发射台站调研表.xlsx`;
+            }
             XLSX.writeFile(wb, fileName);
             showMessage(`数据已成功导出为 "${fileName}"`, 'success');
         }
@@ -2020,6 +2123,8 @@
             let merges = [];
             let currentRow = 0;
             
+            const isUnattended = document.getElementById('isUnattended') ? document.getElementById('isUnattended').value : '';
+            
             const staffingManager = document.getElementById('staffingManager').value;
             const staffingContact = document.getElementById('staffingContact').value;
             sheetData.push(['人事负责人', staffingManager]);
@@ -2047,7 +2152,7 @@
             sheetData.push(new Array(4).fill(''));
             currentRow++;
             
-            const basicInfoHeaders2 = ['单位级别', '隶属关系', '是否独立法人', '法人证书号'];
+            const basicInfoHeaders2 = ['单位级别', '隶属关系', '是否无人值守', '是否独立法人', '法人证书号'];
             sheetData.push(basicInfoHeaders2);
             currentRow++;
             
@@ -2059,8 +2164,9 @@
                 currentRow++;
             }
             
-            sheetData.push(new Array(4).fill(''));
-            currentRow++;
+            if (isUnattended !== '无人值守') {
+                sheetData.push(new Array(4).fill(''));
+                currentRow++;
             
             sheetData.push(['人员编制与实有情况']);
             merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 8 } });
@@ -2204,6 +2310,7 @@
                         });
                     }
                 }
+            }
             }
             
             const ws = XLSX.utils.aoa_to_sheet(sheetData);
