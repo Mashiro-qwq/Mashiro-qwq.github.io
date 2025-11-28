@@ -2073,7 +2073,7 @@
             currentRow++;
             
             sheetData.push(['车辆情况']);
-            merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 2 } });
+            merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 1 } });
             currentRow++;
             
             const vehicleHeaders = ['数量', '原值合计'];
@@ -2133,7 +2133,7 @@
             currentRow += 3;
             
             sheetData.push(['基本信息']);
-            merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 4 } });
+            merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 2 } });
             currentRow++;
             
             const basicInfoHeaders1 = ['地区', '台站名称', '台站地址'];
@@ -2401,7 +2401,7 @@
             const microwaveRows = document.querySelectorAll('#microwaveTableBody tr');
             if (microwaveRows.length > 0) {
                 sheetData.push(['微波业务-微波（7-8GHz、11GHz）']);
-                merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 4 } });
+                merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 0 } });
                 currentRow++;
                 
                 const microwaveHeaders = ['传输方向', '', '', '', ''];
@@ -2418,7 +2418,7 @@
                 
                 sheetData.push(['']);
                 sheetData.push(['经费来源及额度（万元）', '', '', '', '']);
-                merges.push({ s: { r: currentRow + 1, c: 0 }, e: { r: currentRow + 1, c: 4 } });
+                merges.push({ s: { r: currentRow + 1, c: 0 }, e: { r: currentRow + 1, c: 0 } });
                 currentRow += 2;
                 
                 const microwaveFunds = document.getElementById('microwaveFunds')?.value.trim() || '';
