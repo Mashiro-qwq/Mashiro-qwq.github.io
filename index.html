@@ -2168,147 +2168,147 @@
                 sheetData.push(new Array(4).fill(''));
                 currentRow++;
             
-            sheetData.push(['人员编制与实有情况']);
-            merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 8 } });
-            currentRow++;
-            
-            sheetData.push(['', '编制情况', '', '', '', '', '', '', '']);
-            merges.push({ s: { r: currentRow, c: 1 }, e: { r: currentRow, c: 8 } });
-            currentRow++;
-            
-            sheetData.push(['总计', '省编', '', '', '', '地方编', '', '', '']);
-            merges.push({ s: { r: currentRow, c: 1 }, e: { r: currentRow, c: 4 } });
-            merges.push({ s: { r: currentRow, c: 5 }, e: { r: currentRow, c: 8 } });
-            currentRow++;
-            
-            sheetData.push(['', '合计', '管理', '专业技术', '工勤', '合计', '管理', '专业技术', '工勤']);
-            currentRow++;
-            
-            const staffingTableDiv = document.getElementById('staffingTable');
-            if (staffingTableDiv) {
-                const staffingTable1 = staffingTableDiv.querySelector('table:nth-child(2)');
-                if (staffingTable1) {
-                    const staffingRows1 = staffingTable1.querySelectorAll('tbody tr');
-                    if (staffingRows1.length > 0) {
-                        staffingRows1.forEach(row => {
-                            const inputs = row.querySelectorAll('input');
-                            const rowData = Array.from(inputs).map(input => input.value);
-                            sheetData.push(rowData);
-                            currentRow++;
-                        });
-                    }
-                }
-                
-                sheetData.push(new Array(9).fill(''));
+                sheetData.push(['人员编制与实有情况']);
+                merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 8 } });
                 currentRow++;
                 
-                sheetData.push(['', '实有人员情况', '', '', '', '', '', '', '', '', '', '']);
-                merges.push({ s: { r: currentRow, c: 1 }, e: { r: currentRow, c: 11 } });
+                sheetData.push(['', '编制情况', '', '', '', '', '', '', '']);
+                merges.push({ s: { r: currentRow, c: 1 }, e: { r: currentRow, c: 8 } });
                 currentRow++;
                 
-                sheetData.push(['总计', '省编', '', '', '', '地方编', '', '', '', '', '', '']);
+                sheetData.push(['总计', '省编', '', '', '', '地方编', '', '', '']);
                 merges.push({ s: { r: currentRow, c: 1 }, e: { r: currentRow, c: 4 } });
                 merges.push({ s: { r: currentRow, c: 5 }, e: { r: currentRow, c: 8 } });
-                merges.push({ s: { r: currentRow, c: 9 }, e: { r: currentRow, c: 11 } });
                 currentRow++;
                 
-                sheetData.push(['', '合计', '管理', '专业技术', '工勤', '合计', '管理', '专业技术', '工勤', '离退休', '临时工', '借调']);
+                sheetData.push(['', '合计', '管理', '专业技术', '工勤', '合计', '管理', '专业技术', '工勤']);
                 currentRow++;
                 
-                const staffingTable2 = staffingTableDiv.querySelector('table:nth-child(3)');
-                if (staffingTable2) {
-                    const staffingRows2 = staffingTable2.querySelectorAll('tbody tr');
-                    if (staffingRows2.length > 0) {
-                        staffingRows2.forEach(row => {
-                            const inputs = row.querySelectorAll('input');
-                            const rowData = Array.from(inputs).map(input => input.value);
-                            sheetData.push(rowData);
-                            currentRow++;
-                        });
+                const staffingTableDiv = document.getElementById('staffingTable');
+                if (staffingTableDiv) {
+                    const staffingTable1 = staffingTableDiv.querySelector('table:nth-child(2)');
+                    if (staffingTable1) {
+                        const staffingRows1 = staffingTable1.querySelectorAll('tbody tr');
+                        if (staffingRows1.length > 0) {
+                            staffingRows1.forEach(row => {
+                                const inputs = row.querySelectorAll('input');
+                                const rowData = Array.from(inputs).map(input => input.value);
+                                sheetData.push(rowData);
+                                currentRow++;
+                            });
+                        }
+                    }
+                    
+                    sheetData.push(new Array(9).fill(''));
+                    currentRow++;
+                    
+                    sheetData.push(['', '实有人员情况', '', '', '', '', '', '', '', '', '', '']);
+                    merges.push({ s: { r: currentRow, c: 1 }, e: { r: currentRow, c: 11 } });
+                    currentRow++;
+                    
+                    sheetData.push(['总计', '省编', '', '', '', '地方编', '', '', '', '', '', '']);
+                    merges.push({ s: { r: currentRow, c: 1 }, e: { r: currentRow, c: 4 } });
+                    merges.push({ s: { r: currentRow, c: 5 }, e: { r: currentRow, c: 8 } });
+                    merges.push({ s: { r: currentRow, c: 9 }, e: { r: currentRow, c: 11 } });
+                    currentRow++;
+                    
+                    sheetData.push(['', '合计', '管理', '专业技术', '工勤', '合计', '管理', '专业技术', '工勤', '离退休', '临时工', '借调']);
+                    currentRow++;
+                    
+                    const staffingTable2 = staffingTableDiv.querySelector('table:nth-child(3)');
+                    if (staffingTable2) {
+                        const staffingRows2 = staffingTable2.querySelectorAll('tbody tr');
+                        if (staffingRows2.length > 0) {
+                            staffingRows2.forEach(row => {
+                                const inputs = row.querySelectorAll('input');
+                                const rowData = Array.from(inputs).map(input => input.value);
+                                sheetData.push(rowData);
+                                currentRow++;
+                            });
+                        }
                     }
                 }
-            }
-        }
-            
-            sheetData.push(new Array(12).fill(''));
-            currentRow++;
-            
-            sheetData.push(['领导与机构情况']);
-            merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 5 } });
-            currentRow++;
-            
-            sheetData.push(['领导班子', '', '', '', '', '']);
-            merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 5 } });
-            currentRow++;
-            
-            sheetData.push(['正职', '', '', '副职', '', '']);
-            merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 2 } });
-            merges.push({ s: { r: currentRow, c: 3 }, e: { r: currentRow, c: 5 } });
-            currentRow++;
-            
-            sheetData.push(['级别', '职数', '实配', '级别', '职数', '实配']);
-            currentRow++;
-            
-            const leadershipTableDiv = document.getElementById('leadershipTable');
-            if (leadershipTableDiv) {
-                const leadershipTable1 = leadershipTableDiv.querySelector('table:nth-child(2)');
-                if (leadershipTable1) {
-                    const leadershipRows1 = leadershipTable1.querySelectorAll('tbody tr');
-                    if (leadershipRows1.length > 0) {
-                        leadershipRows1.forEach(row => {
-                            const inputs = row.querySelectorAll('input');
-                            const rowData = Array.from(inputs).map(input => input.value);
-                            sheetData.push(rowData);
-                            currentRow++;
-                        });
+
+                sheetData.push(new Array(12).fill(''));
+                currentRow++;
+                
+                sheetData.push(['领导与机构情况']);
+                merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 5 } });
+                currentRow++;
+                
+                sheetData.push(['领导班子', '', '', '', '', '']);
+                merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 5 } });
+                currentRow++;
+                
+                sheetData.push(['正职', '', '', '副职', '', '']);
+                merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 2 } });
+                merges.push({ s: { r: currentRow, c: 3 }, e: { r: currentRow, c: 5 } });
+                currentRow++;
+                
+                sheetData.push(['级别', '职数', '实配', '级别', '职数', '实配']);
+                currentRow++;
+                
+                const leadershipTableDiv = document.getElementById('leadershipTable');
+                if (leadershipTableDiv) {
+                    const leadershipTable1 = leadershipTableDiv.querySelector('table:nth-child(2)');
+                    if (leadershipTable1) {
+                        const leadershipRows1 = leadershipTable1.querySelectorAll('tbody tr');
+                        if (leadershipRows1.length > 0) {
+                            leadershipRows1.forEach(row => {
+                                const inputs = row.querySelectorAll('input');
+                                const rowData = Array.from(inputs).map(input => input.value);
+                                sheetData.push(rowData);
+                                currentRow++;
+                            });
+                        }
                     }
-                }
-                
-                sheetData.push(new Array(6).fill(''));
-                currentRow++;
-                
-                sheetData.push(['内设机构', '', '', '']);
-                merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 3 } });
-                currentRow++;
-                
-                sheetData.push(['级别', '机构数', '职数', '实配']);
-                currentRow++;
-                
-                const leadershipTable2 = leadershipTableDiv.querySelector('table:nth-child(3)');
-                if (leadershipTable2) {
-                    const leadershipRows2 = leadershipTable2.querySelectorAll('tbody tr');
-                    if (leadershipRows2.length > 0) {
-                        leadershipRows2.forEach(row => {
-                            const inputs = row.querySelectorAll('input');
-                            const rowData = Array.from(inputs).map(input => input.value);
-                            const fullRowData = [...rowData, '', ''];
-                            sheetData.push(fullRowData);
-                            currentRow++;
-                        });
+                    
+                    sheetData.push(new Array(6).fill(''));
+                    currentRow++;
+                    
+                    sheetData.push(['内设机构', '', '', '']);
+                    merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 3 } });
+                    currentRow++;
+                    
+                    sheetData.push(['级别', '机构数', '职数', '实配']);
+                    currentRow++;
+                    
+                    const leadershipTable2 = leadershipTableDiv.querySelector('table:nth-child(3)');
+                    if (leadershipTable2) {
+                        const leadershipRows2 = leadershipTable2.querySelectorAll('tbody tr');
+                        if (leadershipRows2.length > 0) {
+                            leadershipRows2.forEach(row => {
+                                const inputs = row.querySelectorAll('input');
+                                const rowData = Array.from(inputs).map(input => input.value);
+                                const fullRowData = [...rowData, '', ''];
+                                sheetData.push(fullRowData);
+                                currentRow++;
+                            });
+                        }
                     }
-                }
-                
-                sheetData.push(new Array(6).fill(''));
-                currentRow++;
-                
-                sheetData.push(['职称情况', '', '', '', '']);
-                merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 4 } });
-                currentRow++;
-                
-                sheetData.push(['合计', '正高', '副高', '中级', '初级']);
-                currentRow++;
-                
-                const leadershipTable3 = leadershipTableDiv.querySelector('table:nth-child(4)');
-                if (leadershipTable3) {
-                    const leadershipRows3 = leadershipTable3.querySelectorAll('tbody tr');
-                    if (leadershipRows3.length > 0) {
-                        leadershipRows3.forEach(row => {
-                            const inputs = row.querySelectorAll('input');
-                            const rowData = Array.from(inputs).map(input => input.value);
-                            const fullRowData = [...rowData, ''];
-                            sheetData.push(fullRowData);
-                            currentRow++;
-                        });
+                    
+                    sheetData.push(new Array(6).fill(''));
+                    currentRow++;
+                    
+                    sheetData.push(['职称情况', '', '', '', '']);
+                    merges.push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 4 } });
+                    currentRow++;
+                    
+                    sheetData.push(['合计', '正高', '副高', '中级', '初级']);
+                    currentRow++;
+                    
+                    const leadershipTable3 = leadershipTableDiv.querySelector('table:nth-child(4)');
+                    if (leadershipTable3) {
+                        const leadershipRows3 = leadershipTable3.querySelectorAll('tbody tr');
+                        if (leadershipRows3.length > 0) {
+                            leadershipRows3.forEach(row => {
+                                const inputs = row.querySelectorAll('input');
+                                const rowData = Array.from(inputs).map(input => input.value);
+                                const fullRowData = [...rowData, ''];
+                                sheetData.push(fullRowData);
+                                currentRow++;
+                            });
+                        }
                     }
                 }
             }
