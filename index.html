@@ -1418,7 +1418,7 @@
                 checkbox.closest('tr').remove();
             });
             
-            const businessTables = ['mw', 'dtt', 'fm', 'microwave', 'cdr', 'tower', 'power'];
+            const businessTables = ['mw', 'dtt', 'fm', 'microwave', 'cdr', 'tower'];
             if (tableBody.children.length === 0 && !businessTables.includes(tableType)) {
                 addNewRow(tableType);
             }
