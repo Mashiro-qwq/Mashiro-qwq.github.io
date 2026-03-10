@@ -1446,7 +1446,14 @@
         function updateMicrowaveFundsStatus() {
             const microwaveRows = document.querySelectorAll('#microwaveTableBody tr');
             const microwaveFunds = document.getElementById('microwaveFunds');
-            microwaveFunds.disabled = microwaveRows.length === 0;
+            if (microwaveRows.length === 0) {
+                microwaveFunds.disabled = true;
+                microwaveFunds.classList.add('bg-gray-50');
+                microwaveFunds.value = '';
+            } else {
+                microwaveFunds.disabled = false;
+                microwaveFunds.classList.remove('bg-gray-50');
+            }
         }
         
         function createSelectCell(rowIndex, tableType, columnName, options) {
